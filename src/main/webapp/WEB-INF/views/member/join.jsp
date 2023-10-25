@@ -85,8 +85,21 @@
 
           <div class="form-group row">
             <label for="mbsp_email" class="col-2">이메일</label>
-            <div class="col-10">
+            <div class="col-8">
               <input type="email" class="form-control" name="mbsp_email" id="mbsp_email" placeholder="이메일 입력">
+            </div>
+            <div class="col-2">
+              <button type="button" class="btn btn-outline-info" id="mailAuth">메일인증</button>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="authcode" class="col-2">메일인증</label> 
+            <div class="col-8">
+              <input type="text" class="form-control" name="authcode" id="authcode" placeholder="인증코드 입력">
+            </div>
+            <div class="col-2">
+              <button type="button" class="btn btn-outline-info" id="">인증확인</button>
             </div>
           </div>
 
@@ -230,6 +243,7 @@
   </script>
 
 	<%@ include file="/WEB-INF/views/comm/plugIn.jsp" %>
+  <!--$가 정의가 안되어 있다하면 pulgIn 내부의 주소를 참조하지 못하는 것-->
 
   <script>
     // 기본적으로 cdn 주소를 참조하고 그 아래부터 작업을 시작
@@ -237,6 +251,10 @@
     // 별칭 : $ -> jQuery() 함수
     // read() event method : 브라우저가 html 태그를 모두 읽고난 후에 동작하는 이벤트 특징.
     $(document).ready(function() {
+
+      // 아이디 중복체크 사용유무 확인작업
+      let useIDCheck = false;
+
       // document.getElementById("idCheck"); JS의 참조
       $("#idCheck").click(function() {
         // alert("아이디 중복체크");
@@ -247,6 +265,46 @@
         }
 
         // 아이디 중복체크 작업
+        $.ajax({
+          url : "/member/idCheck",
+          type : "get",
+          dataType : "text", // 스프링에서 보내는 데이터의 타입
+          data : {mbsp_id : $("#mbsp_id").val()},
+          success : function(result) {
+            if(result == "yes") {
+              alert("아이디 사용가능");
+              useIDCheck = true;
+            } else {
+              alert("아이디 사용불가능");
+              useIDCheck = false;
+              $("#mbsp_id").val(""); // id 텍스트 박스 공백처리
+              $("#mbsp_id").focus();
+              // val() 의 매개변수가 없으면 getter, 존재하면 setter 성격이 된다.
+            }
+          }
+        });
+      });
+
+      // 메일인증 요청
+      $("#mailAuth").click(function() {
+        // alert("메일인증 요청");
+        if($("#mbsp_email").val() == "") {
+          alert("이메일을 입력하세요");
+          $("#mbsp_email").focus();
+          return;
+        }
+
+        $.ajax({
+          url : '/email/authcode',
+          type : 'get',
+          dataType : 'text', // 스프링에서 보내는 데이터의 타입. 'success'
+          data : {receiverMail : $("#mbsp_email").val()}, // 파라미터명이 스프링이 보내는 데이터와 일치해야한다.
+          success : (result) => {
+            if(result == "success") {
+              alert("인증메일이 발송되었습니다.");
+            }
+          }
+        })
       });
     });
   </script>

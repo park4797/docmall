@@ -240,6 +240,22 @@
 	    <scope>provided</scope>
 	</dependency>
 	<!-- 추가 라이브러리 설정 끝 -->
+	
+	<!-- 스케줄링, 메일발송, 캐시 연동,Velocity 등 부가기능제공 -->
+      <!-- org.springframework.mail.javamail.JavaMailSenderImpl -->
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-context-support</artifactId>
+          <version>${org.springframework-version}</version>
+      </dependency>
+      
+      <!-- 이론설명 할것. -->
+      <!-- 메일 관련라이브러리  javax.mail.internet.MimeMessage -->
+        <dependency>
+          <groupId>com.sun.mail</groupId>
+          <artifactId>javax.mail</artifactId>
+          <version>1.5.6</version>
+      </dependency>
 		     
 	</dependencies>
     <build>
