@@ -6,7 +6,32 @@
 <mapper namespace="com.test.mapper.MemberMapper">
 
 	<select id="idCheck" parameterType="String" resultType="String">
-		select MBSP_ID from MBSP_TBL where MBSP_ID = #{MBSP_ID}	
+		SELECT
+			MBSP_ID
+		FROM
+			MBSP_TBL
+		WHERE
+			MBSP_ID = #{MBSP_ID}	
 	</select>
 
+	<insert id="join" parameterType="com.test.domain.MemberVO">
+		INSERT INTO MBSP_TBL(MBSP_ID, MBSP_NAME, MBSP_EMAIL, MBSP_PASSWORD, MBSP_ZIPCODE, MBSP_ADDR, MBSP_DEADDR, MBSP_PHONE)
+		VALUES(#{mbsp_id}, #{mbsp_name}, #{mbsp_email}, #{mbsp_password}, #{mbsp_zipcode}, #{mbsp_addr}, #{mbsp_deaddr}, #{mbsp_phone})
+	</insert>
+	
+	<select id="login" parameterType="String" resultType="com.test.domain.MemberVO">
+		SELECT
+			MBSP_ID,
+			MBSP_NAME,
+			MBSP_EMAIL,
+			MBSP_PASSWORD,
+			MBSP_ZIPCODE,
+			MBSP_ADDR,
+			MBSP_DEADDR,
+			MBSP_PHONE
+		FROM
+			MBSP_TBL
+		WHERE
+			MBSP_ID = #{mbsp_id}
+	</select>
 </mapper>

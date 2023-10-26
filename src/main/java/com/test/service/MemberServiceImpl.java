@@ -2,6 +2,7 @@ package com.test.service;
 
 import org.springframework.stereotype.Service;
 
+import com.test.domain.MemberVO;
 import com.test.mapper.MemberMapper;
 
 @Service
@@ -18,5 +19,15 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public String idCheck(String mbsp_id) {
 		return memberMapper.idCheck(mbsp_id);
+	}
+
+	@Override
+	public void join(MemberVO vo) {
+		memberMapper.join(vo);
+	}
+
+	@Override
+	public MemberVO login(String mbsp_id) {
+		return memberMapper.login(mbsp_id);
 	}
 }

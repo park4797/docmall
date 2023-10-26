@@ -33,7 +33,7 @@ public class EmailController {
 		// 인증코드 6자리 랜덤생성 로직
 		String authCode = "";
 		for(int i=0; i<6; i++) {
-			authCode = String.valueOf((int)(Math.random() * 10));
+			authCode += String.valueOf((int)(Math.random() * 10));
 		}
 		
 		log.info("인증코드 : " + authCode);
@@ -52,4 +52,27 @@ public class EmailController {
 		
 		return entity;
 	}
+	
+	// 인증코드 확인작업 = 세션형태로 저장한 정보를 이용
+	@GetMapping("/confirmAuthcode")
+	public ResponseEntity<String> confirmAuthcode(String authCode, HttpSession session) {
+		
+		ResponseEntity<String> entity = null;
+		
+//		String sAuthCode = "";
+		if(session.getAttribute("authCode") != null) {
+			// 인증일치 여부
+			if(authCode.equals(session.getAttribute("authCode"))) {
+				entity = new ResponseEntity<String>("success" , HttpStatus.OK);
+			} else { 
+				entity = new ResponseEntity<String>("fail" , HttpStatus.OK);
+			}
+		} else {
+			// 세션이 소멸되었을 때
+			entity = new ResponseEntity<String>("request" , HttpStatus.OK);
+		}
+		
+		return entity;
+	}
+	
 }
