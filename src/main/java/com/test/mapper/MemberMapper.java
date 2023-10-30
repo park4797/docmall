@@ -10,4 +10,11 @@ public interface MemberMapper {
 	void join(MemberVO vo);
 	
 	MemberVO login(String mbsp_id);
+	
+	void modify(MemberVO vo);
+	
+	void loginTimeUpdate(String mbsp_id);
+	
+	// 삭제
+	void delete(String mbsp_id);
 }

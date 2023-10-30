@@ -28,10 +28,41 @@
 			MBSP_ZIPCODE,
 			MBSP_ADDR,
 			MBSP_DEADDR,
-			MBSP_PHONE
+			MBSP_PHONE,
+			MBSP_LASTLOGIN,
+			MBSP_UPDATEDATE
 		FROM
 			MBSP_TBL
 		WHERE
 			MBSP_ID = #{mbsp_id}
 	</select>
+	
+	<update id="modify" parameterType="com.test.domain.MemberVO">
+		UPDATE
+			MBSP_TBL
+    	SET
+    		MBSP_EMAIL = #{mbsp_email},
+	        MBSP_ZIPCODE = #{mbsp_zipcode},
+	        MBSP_ADDR = #{mbsp_addr},
+	        MBSP_DEADDR = #{mbsp_deaddr},
+	        MBSP_PHONE = #{mbsp_phone},
+	        MBSP_UPDATEDATE = sysdate
+		WHERE
+			MBSP_ID = #{mbsp_id}
+	</update>
+	
+	<update id="loginTimeUpdate" parameterType="String">
+		UPDATE
+			MBSP_TBL
+		SET
+	        MBSP_LASTLOGIN = sysdate
+		WHERE
+			MBSP_ID = #{mbsp_id}
+	</update>
+	<delete id="delete" parameterType="String">
+		DELETE FROM
+		    MBSP_TBL
+		WHERE
+		    MBSP_ID = #{mpsp_id}
+	</delete>
 </mapper>

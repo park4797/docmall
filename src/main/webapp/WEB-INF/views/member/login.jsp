@@ -37,13 +37,6 @@
 
     </style>
 
-    <script>
-      let msg = '${msg}';
-      if(msg != "") {
-        alert(msg);
-      }
-    </script>
-
   </head>
   <body>
     
