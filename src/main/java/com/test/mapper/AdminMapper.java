@@ -1,5 +1,10 @@
 package com.test.mapper;
 
-public interface AdminMapper {
+import com.test.domain.AdminVO;
 
+public interface AdminMapper {
+	
+	AdminVO admin_ok(String admin_id);
+	
+	void loginTime(String admin_id);
 }
