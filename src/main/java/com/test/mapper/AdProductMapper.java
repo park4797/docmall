@@ -1,7 +1,8 @@
 package com.test.mapper;
 
-import lombok.RequiredArgsConstructor;
+import com.test.domain.ProductVO;
 
 public interface AdProductMapper {
-
+	
+	void pro_insert(ProductVO vo);
 }

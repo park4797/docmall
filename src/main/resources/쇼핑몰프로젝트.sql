@@ -95,139 +95,139 @@ SELECT MBSP_PASSWORD FROM MBSP_TBL WHERE MBSP_ID = ?;
 
 DROP TABLE CATEGORY_TBL;
 CREATE TABLE CATEGORY_TBL(
-        CAT_CODE            NUMBER    PRIMARY KEY,    -- 카테고리 코드
-        CAT_PRTCODE         NUMBER    NULL,           -- 상위카테고리 코드
-        CAT_NAME            VARCHAR2(50)    NOT NULL,
-        FOREIGN KEY(CAT_PRTCODE) REFERENCES CATEGORY_TBL(CAT_CODE)
+        CG_CODE            NUMBER    PRIMARY KEY,    -- 카테고리 코드
+        CG_PARENT_CODE     NUMBER    NULL,           -- 상위카테고리 코드
+        CG_NAME            VARCHAR2(50)    NOT NULL,
+        FOREIGN KEY(CG_PARENT_CODE) REFERENCES CATEGORY_TBL(CG_CODE)
 );
-
+cg_code, cg_parent_code, cg_name
 -- / -> /
 
 -- 1차 카테고리 : TOP(1) PANTS(2) SHIRTS(3) OUTER(4) SHOES(5) BAG(6) ACC(7)
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (1,NULL,'TOP');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (2,NULL,'PANTS');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (3,NULL,'SHIRTS');    
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (4,NULL,'OUTER');        
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (5,NULL,'SHOES');    
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (6,NULL,'BAG');    
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (7,NULL,'ACC');    
 
 -- 1차카테고리 TOP : 1
 -- 2차 카테고리 : 긴팔티 니트 맨투맨/후드티 프린팅티 나시 반팔티/7부티
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (8,1,'긴팔티');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
 VALUES (9,1,'니트');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
 VALUES (10,1,'맨투맨&#38;후드티');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
 VALUES (11,1,'프린팅티');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
 VALUES (12,1,'나시');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
 VALUES (13,1,'반팔티&#38;7부티');
 
 -- 1차카테고리 PANTS : 2
 -- 2차카테고리 : 밴딩팬츠 청바지 슬랙스 면바지 반바지
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (14,2,'밴딩팬츠');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (15,2,'청바지');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME)
     VALUES (16,2,'슬랙스');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME)
     VALUES (17,2,'면바지');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME)
     VALUES (18,2,'반바지');
     
 -- 1차카테고리 SHIRTS : 3
 -- 2차카테고리 : 헨리넥/차이나 베이직 체크/패턴 청남방 스트라이프 
 
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (19,3,'헨리넥&#38;차이나');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (20,3,'베이직');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (21,3,'체크&#38;패턴');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (22,3,'청남방');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (23,3,'스트라이프'); 
     
     
 -- 1차카테고리 OUTER : 4
 -- 2차카테고리 : 패딩 코트 수트/블레이져 자켓 블루종/MA-1 가디건/조끼 후드/집업
 
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (24,4,'패딩');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (25,4,'코트');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (26,4,'수트&#38;블레이져');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (27,4,'자켓');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (28,4,'블루종&#38;MA-1');     
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (29,4,'가디건&#38;조끼');     
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME)
     VALUES (30,4,'후드&#38;집업');  
     
 -- 1차카테고리 SHOES : 5
 -- 2차카테고리 : 스니커즈 로퍼/구두 키높이신발/깔창 슬리퍼/쪼리/샌들
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (31,5,'스니커즈');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (32,5,'로퍼&#38;구두');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (33,5,'키높이신발&#38;깔창');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME)
     VALUES (34,5,'슬리퍼&#38;쪼리/샌들');
    
 -- 1차카테고리 BAG : 6
 -- 2차카테고리 : 백팩 토트/숄더백 크로스백 클러치
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (35,6,'백팩'); 
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (36,6,'토트/숄더백');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (37,6,'크로스백');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (38,6,'클러치');    
 -- 1차카테고리 ACC : 7
 -- 2차카테고리 : 양말/넥타이 모자 머플러/장갑 아이웨어 벨트/시계 기타
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (39,7,'양말/넥타이');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (40,7,'모자');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (41,7,'머플러&#38;장갑');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (42,7,'아이웨어');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (43,7,'벨트&#38;시계');
-INSERT INTO category_tbl (cat_code,cat_prtcode,cat_name) 
+INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
     VALUES (44,7,'기타');
 
 commit;
     
 
 -- 1차카테고리 출력
-SELECT cat_code,cat_prtcode,cat_name FROM category_tbl WHERE cat_prtcode IS NULL;
+SELECT CG_CODE,CG_PARENT_CODE,CG_NAME FROM CATEGORY_TBL WHERE CG_PARENT_CODE IS NULL;
 
 -- 1차카테고리 TOP 의 2차카테고리 출력.
-SELECT * FROM category_tbl WHERE cat_prtcode = 1;
+SELECT CG_CODE,CG_PARENT_CODE,CG_NAME FROM CATEGORY_TBL WHERE CG_PARENT_CODE = 1;
 
 
 -- 2차카테고리 전부 출력하라.
-SELECT * FROM category_tbl WHERE cat_prtcode IS NOT NULL;
+SELECT * FROM category_tbl WHERE CG_PARENT_CODE IS NOT NULL;
 
 
 
@@ -251,22 +251,25 @@ DROP TABLE PRODUCT_TBL;
 DROP TABLE PRODUCT_TBL;
 CREATE TABLE PRODUCT_TBL(
         PRO_NUM             NUMBER  CONSTRAINT  PK_PRO_NUM         PRIMARY KEY,
-        CAT_CODE            NUMBER            NULL,
+        CG_CODE            NUMBER            NULL,
         PRO_NAME            VARCHAR2(50)            NOT NULL,
         PRO_PRICE           NUMBER                  NOT NULL,
         PRO_DISCOUNT        NUMBER                  NOT NULL,
         PRO_PUBLISHER       VARCHAR2(50)            NOT NULL,
         PRO_CONTENT         VARCHAR2(4000)  /* CLOB */                  NOT NULL,       -- 내용이 4000BYTE 초과여부판단?
-        PRO_UP_FOLDER       VARCHAR(50)             NOT NULL,
-        PRO_IMG             VARCHAR(50)             NOT NULL,  -- 날짜폴더경로가 포함하여 파일이름저장
+        PRO_UP_FOLDER       VARCHAR2(50)             NOT NULL,
+        PRO_IMG             VARCHAR2(50)             NOT NULL,  -- 날짜폴더경로가 포함하여 파일이름저장
         PRO_AMOUNT          NUMBER                  NOT NULL,
-        PRO_BUY             CHAR(1)                 NOT NULL,
+        PRO_BUY             VARCHAR2(10)            NOT NULL,
         PRO_DATE            DATE DEFAULT SYSDATE    NOT NULL,
         PRO_UPDATEDATE      DATE DEFAULT SYSDATE    NOT NULL,
-        FOREIGN KEY(CAT_CODE) REFERENCES CATEGORY_TBL(CAT_CODE)
+        FOREIGN KEY(CG_CODE) REFERENCES CATEGORY_TBL(CG_CODE)
 );
 
-pro_num, cat_code, pro_name, pro_price, pro_discount, pro_publisher, pro_content, pro_up_folder, pro_img, pro_amount, pro_buy, pro_date, pro_updatedate
+pro_num, CG_CODE, pro_name, pro_price, pro_discount, pro_publisher, pro_content, pro_up_folder, pro_img, pro_amount, pro_buy, pro_date, pro_updatedate
+
+-- 상품테이블의 상품코드 컬럼에 사용목적으로 생성 (PRO_NUM)
+CREATE SEQUENCE SEQ_PRODUCT_TBL;
 
 -- 상품마다 이미지의 개수가 다를 경우 별도의 테이블을 구성(권장)
 -- 상품설명 컬럼에 웹에디터를 이용한 태그코드 내용이 저장된다.
@@ -274,7 +277,8 @@ pro_num, cat_code, pro_name, pro_price, pro_discount, pro_publisher, pro_content
 -- PRO_CONTENT컬럼이 CLOB 데이타 타입은 비교명령어를 지원안함.
 SELECT * FROM product_tbl ORDER BY PRO_CONTENT ASC;
 
-
+-- CG_CODE, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY
+-- cg_code, pro_name, pro_price, pro_discount, pro_publisher, pro_content, pro_up_folder, pro_img, pro_amount, pro_buy
 
 -- 상품등록작업
 -- pro_up_folder 컬럼 : 업로드파일의 저장 날짜폴더이름.   운영체제별 경로구분자  유형1) /2023/04/06/   유형2)\2023\04\06\ 역슬래쉬
@@ -282,76 +286,76 @@ SELECT * FROM product_tbl ORDER BY PRO_CONTENT ASC;
 
 -- 1차카테고리 : TOP (코드 : 1)
 -- 2차카테고리 : 긴팔티(코드 : 8)
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_up_folder, pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_up_folder, pro_amount,pro_buy) 
 VALUES (1,8,'A',10000,0.1,'동아','어쩌구저쩌구','\2023\04\06\','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code, pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_up_folder,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE, pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_up_folder,pro_amount,pro_buy) 
 VALUES (2,14,'A',10000,0.1,'동아','어쩌구저쩌구','\2023\04\06\','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_up_folder,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_up_folder,pro_amount,pro_buy) 
 VALUES (3,19,'A',10000,0.1,'동아','어쩌구저쩌구','\2023\04\06\','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_up_folder,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_up_folder,pro_amount,pro_buy) 
 VALUES (4,24,'A',10000,0.1,'동아','어쩌구저쩌구','\2023\04\06\','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_up_folder,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_up_folder,pro_amount,pro_buy) 
 VALUES (5,31,'A',10000,0.1,'동아','어쩌구저쩌구','\2023\04\06\','abc.gif',10,'Y');
 
 -- 2차카테고리 : 니트(코드 : 9)
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (6,'9','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code, pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE, pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (7,'9','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (8,'9','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (9,'9','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (10,'9','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
 
 -- 2차카테고리 : 맨투맨&후드티(코드 : 10)
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (11,'10','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code, pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE, pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (12,'10','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (13,'10','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (14,'10','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (15,'10','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
 
 -- 2차카테고리 : 프린팅티(코드 : 11)
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (16,'11','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code, pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE, pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (17,'11','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (18,'11','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (19,'11','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (20,'11','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
 
 
 -- 2차카테고리 : 나시(코드 : 12)
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (21,'12','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code, pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE, pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (22,'12','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (23,'12','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (24,'12','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (25,'12','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
 
 -- 2차카테고리 : 반팔티&7부티(코드 : 13)
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (26,'13','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code, pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE, pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (27,'13','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (28,'13','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (29,'13','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
-INSERT INTO product_tbl (pro_num,cat_code,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
+INSERT INTO product_tbl (pro_num,CG_CODE,pro_name,pro_price,pro_discount,pro_publisher,pro_content,pro_img,pro_amount,pro_buy) 
 VALUES (30,'13','A',10000,0.1,'동아','어쩌구저쩌구','abc.gif',10,'Y');
 
 COMMIT;
@@ -362,14 +366,14 @@ COMMIT;
 */
 
 -- 1차 카테고리별 상품목록 조회.  예) TOP(1) 1차카테고리 선택
-SELECT * FROM product_tbl WHERE cat_code IN (SELECT cat_code FROM  category_tbl WHERE CAT_PRTCODE = ? );
+SELECT * FROM product_tbl WHERE CG_CODE IN (SELECT CG_CODE FROM  category_tbl WHERE CG_PARENT_CODE = ? );
 
-SELECT * FROM product_tbl WHERE cat_code IN (SELECT cat_code FROM  category_tbl WHERE CAT_PRTCODE = 1 );
+SELECT * FROM product_tbl WHERE CG_CODE IN (SELECT CG_CODE FROM  category_tbl WHERE CG_PARENT_CODE = 1 );
 
 -- 2차 카테고리별 상품목록 조회.
-SELECT * FROM product_tbl WHERE cat_code = ?;
+SELECT * FROM product_tbl WHERE CG_CODE = ?;
 
-SELECT * FROM product_tbl WHERE cat_code = 8;
+SELECT * FROM product_tbl WHERE CG_CODE = 8;
 
 
 
@@ -431,23 +435,23 @@ USING DUAL
     UPDATE
         SET C.CAT_AMOUNT = C.CAT_AMOUNT + ?
  WHEN NOT MATCHED THEN
-    INSERT (C.CAT_CODE, C.PRO_NUM, C.MBSP_ID, C.CAT_AMOUNT)
+    INSERT (C.CG_CODE, C.PRO_NUM, C.MBSP_ID, C.CAT_AMOUNT)
     VALUES ( ?, ?, ?, ?);
     
     
 -- 장바구니에 동일상품이 존재하는 지 여부만 확인    
 SELECT COUNT(*) FROM CART_TBL WHERE (C.MBSP_ID = ?) AND (C.PRO_NUM = ?);
 
-SELECT C.CAT_CODE FROM CART_TBL WHERE (C.MBSP_ID = ?) AND (C.PRO_NUM = ?);
+SELECT C.CG_CODE FROM CART_TBL WHERE (C.MBSP_ID = ?) AND (C.PRO_NUM = ?);
     
     
     
 
-INSERT INTO cart_tbl (cat_code,pro_num,mbsp_id,cat_amount) VALUES (1,1,'user01', 2 );
-INSERT INTO cart_tbl (cat_code,pro_num,mbsp_id,cat_amount) VALUES (2,5,'user01', 3 );
-INSERT INTO cart_tbl (cat_code,pro_num,mbsp_id,cat_amount) VALUES (3,7,'user01', 5 );
-INSERT INTO cart_tbl (cat_code,pro_num,mbsp_id,cat_amount) VALUES (4,12,'user02', 1 );
-INSERT INTO cart_tbl (cat_code,pro_num,mbsp_id,cat_amount) VALUES (5,30,'user02', 2 );
+INSERT INTO cart_tbl (CG_CODE,pro_num,mbsp_id,cat_amount) VALUES (1,1,'user01', 2 );
+INSERT INTO cart_tbl (CG_CODE,pro_num,mbsp_id,cat_amount) VALUES (2,5,'user01', 3 );
+INSERT INTO cart_tbl (CG_CODE,pro_num,mbsp_id,cat_amount) VALUES (3,7,'user01', 5 );
+INSERT INTO cart_tbl (CG_CODE,pro_num,mbsp_id,cat_amount) VALUES (4,12,'user02', 1 );
+INSERT INTO cart_tbl (CG_CODE,pro_num,mbsp_id,cat_amount) VALUES (5,30,'user02', 2 );
 
 SELECT * FROM cart_tbl;
 COMMIT;
@@ -478,19 +482,19 @@ WHERE c.MBSP_ID = 'user01';
 -- 수량을 직접변경
 UPDATE cart_tbl
     SET CAT_AMOUNT = 10
-WHERE CAT_CODE = 1;
+WHERE CG_CODE = 1;
 
-SELECT * FROM cart_tbl WHERE CAT_CODE = 1;
+SELECT * FROM cart_tbl WHERE CG_CODE = 1;
 COMMIT;
 -- 유의!!!!(수량을 누적)
 UPDATE cart_tbl
     SET CAT_AMOUNT = CAT_AMOUNT + 10
-WHERE CAT_CODE = 1;
+WHERE CG_CODE = 1;
 
--- 장바구니 상품삭제 ( CAT_CODE : 장바구니코드 )
-DELETE FROM cart_tbl WHERE CAT_CODE = 1;
+-- 장바구니 상품삭제 ( CG_CODE : 장바구니코드 )
+DELETE FROM cart_tbl WHERE CG_CODE = 1;
 
-SELECT * FROM cart_tbl WHERE CAT_CODE = 1;
+SELECT * FROM cart_tbl WHERE CG_CODE = 1;
 COMMIT;
 
 -- 장바구니 비우기 : 로그인 한 사용자 데이타만 삭제해야 한다.(주의)

@@ -1,4 +1,4 @@
-package com.test.dto;
+package com.test.domain;
 
 public class CategoryVO {
 	
