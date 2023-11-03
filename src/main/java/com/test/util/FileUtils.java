@@ -1,11 +1,16 @@
 package com.test.util;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import net.coobird.thumbnailator.Thumbnailator;
 
 // file upload 관련 필요한 method를 구성
 public class FileUtils {
@@ -23,7 +28,11 @@ public class FileUtils {
 		// 윈도우즈 구분자 : \, / ex ) 2023\11\02
 		return str.replace("-", File.separator); 
 	}
-	
+	/*
+	 String uploadFolder : 서버측에 업로드될 폴더(value="C:\\dev\\upload\\product\\") - servlet-context.xml 참고
+	 String dateFolder : 이미지파일을 저장할 날짜 폴더명 2023\11\03
+	 MultipartFile uploadFile : upload된 파일을 참조하는 객체
+	 */
 	// 서버에 파일업로드 기능 및 실제업로드 한 파일명을 반환값으로 사용
 	public static String uploadFile(String uploadFolder, String dateFolder, MultipartFile uploadFile) {
 		
@@ -39,8 +48,9 @@ public class FileUtils {
 		
 		String clientFileName = uploadFile.getOriginalFilename();
 		
-		// 파일명을 중복방지를 위하여 고유한 이름에 사용하는 UUID
+		// UUID : 파일명을 중복방지를 위하여 고유한 문자열을 생성해주는 클래스
 		UUID uuid = UUID.randomUUID();
+		// 904e1906-ed6f-49d2-867a-7648f07628d4_Hello.PNG
 		realUploadFileName = uuid.toString() + "_" + clientFileName;
  		
 		try {
@@ -49,10 +59,49 @@ public class FileUtils {
 			
 			// 파일업로드(파일복사) 
 			uploadFile.transferTo(saveFile); // 파일업로드의 핵심 메소드
+			
+			// Thumbnail 작업
+			// 원본이미지를 파일크기와 해상도를 낮추어 작은 형태의 이미지로 만드는 것
+			if(checkImageType(saveFile)) { // 첨부된 파일이 이미지 일 경우라면
+				
+				// 썸네일 작업기능 라이브러리에서 제공하는 클래스, pom.xml 참고
+				// 파일 출력 스트림
+				// 밑에줄만 실행이 되면, 파일이 생성. 0 KB
+				FileOutputStream thumbnail = new FileOutputStream(new File(file, "s_" + realUploadFileName));
+				
+				// 원본이미지파일의 내용을 스트림방식으로 읽어서, 썸네일이미지파일에 쓰는 작업
+				/*
+				 uploadFile.getInputStream() : 원본이미지파일의 입력스트림
+				 thumbnail : 사본파일(thumbnail) 생성
+				 */
+				Thumbnailator.createThumbnail(uploadFile.getInputStream(), thumbnail, 100, 100);
+				
+				thumbnail.close();
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace(); // 파일업로드시 예외가 발생되면, 예외정보를 출력
 		}
 		
 		return realUploadFileName; // 상품테이블에 파일명 이름이 저장된다.(상품 이미지명)
+	}
+	
+	// 자바스크립트로 업로드되는 파일의 확장자를 이용하여, 이미지파일만 파일첨부가능하도록 작업할 수 있다.
+	// 업로드되는 파일구분(이미지파일 또는 일반파일 구분)
+	private static boolean checkImageType(File saveFile) {
+		
+		boolean isImageType = false; // 변수의 값이 true면 이미지파일이고, false면 일반파일이다.
+		
+		try {
+			// MIME 정보가 들어온다. : text/html, text/plain, image/jpg, ...
+			String contentType = Files.probeContentType(saveFile.toPath());
+			
+			// contentType 변수의 값이 image 문자열로 시작하고 있는지 여부를 true, false 값으로 반환해준다
+			isImageType = contentType.startsWith("image");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return isImageType;
 	}
 }
