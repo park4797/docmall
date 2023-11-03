@@ -248,6 +248,8 @@ DROP TABLE PRODUCT_TBL;
     NULL -> NOT NULL 로 변경 불가능
 
 */
+COMMIT;
+
 DROP TABLE PRODUCT_TBL;
 CREATE TABLE PRODUCT_TBL(
         PRO_NUM             NUMBER  CONSTRAINT  PK_PRO_NUM         PRIMARY KEY,
@@ -258,7 +260,7 @@ CREATE TABLE PRODUCT_TBL(
         PRO_PUBLISHER       VARCHAR2(50)            NOT NULL,
         PRO_CONTENT         VARCHAR2(4000)  /* CLOB */                  NOT NULL,       -- 내용이 4000BYTE 초과여부판단?
         PRO_UP_FOLDER       VARCHAR2(50)             NOT NULL,
-        PRO_IMG             VARCHAR2(50)             NOT NULL,  -- 날짜폴더경로가 포함하여 파일이름저장
+        PRO_IMG             VARCHAR2(200)             NOT NULL,  -- 날짜폴더경로가 포함하여 파일이름저장
         PRO_AMOUNT          NUMBER                  NOT NULL,
         PRO_BUY             VARCHAR2(10)            NOT NULL,
         PRO_DATE            DATE DEFAULT SYSDATE    NOT NULL,
