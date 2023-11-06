@@ -139,8 +139,8 @@ desired effect
               <div class="col-sm-4">
                 <select class="form-control" id="pro_buy" name="pro_buy">
                   <!-- value값이 없으면 "판매가능", "판매불가능"이 값으로 들어간다 -->
-                  <option value="가능">판매가능</option>
-                  <option value="불가능">판매불가능</option>
+                  <option value="Y">판매가능</option>
+                  <option value="N">판매불가능</option>
                 </select>
               </div>
             </div>

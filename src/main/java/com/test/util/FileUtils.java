@@ -8,6 +8,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import net.coobird.thumbnailator.Thumbnailator;
@@ -104,4 +108,35 @@ public class FileUtils {
 		
 		return isImageType;
 	}
+	
+	/* 프로젝트 외부폴더에서 관리되고 있는 상품이미지를 브라우저의 <img src="매핑주소"> 태그로부터 요청이 들어왔을때, 바이트 배열로 보내주는 작업
+	   <img src="test.jpg"> 는 외부폴더에서 관리되고 있기 때문에 사용하지 않는다. -> 상품 등록시 DB에 filename이 저장되기 때문에 경로에서 불러오면 되기때문
+	 */
+	// <TypeParameter> 는 실제 return 값
+	// String uploadPath : 업로드 폴더 경로, String fileName : 날짜폴더경로를 포함한 파일명(DB)
+	// ResponseEntity class : 1) header, 2) body : 데이터에 대한 설명 등, 3) StatusCode 으로 구성
+	public static ResponseEntity<byte[]> getFile(String uploadPath, String fileName) throws Exception { // DB 관련 작업이므로 예외처리
+		
+		ResponseEntity<byte[]> entity = null;
+		
+		// 이미지 파일을 참조하는 객체 생성
+		File file = new File(uploadPath, fileName);
+		
+		// 파일이 해당경로에 존재하지 않으면
+		if(!file.exists()) {
+			return entity; // null로 리턴된다.
+		}
+		
+		// 1) Header
+		// Files.probeContentType(file.toPath()); : 위 file 객체를 통해 참조
+		// 만약 파일이 jpg 파일일경우 image/jpeg로 생성된다.
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-type", Files.probeContentType(file.toPath())); // jsp의 header처럼 Content-type MIME 정보를 맞춰준다. 
+		
+		// FileCopyUtils.copyToByteArray : 마임타입을 확인하지 못하면 null을 반환합니다.
+		entity = new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
+		
+		return entity;
+	}
+	
 }

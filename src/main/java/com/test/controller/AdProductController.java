@@ -10,11 +10,13 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -165,17 +167,27 @@ public class AdProductController {
 	@GetMapping("/pro_list")
 	public void pro_list(Criteria cri, Model model) throws Exception {
 		
+		cri.setAmount(2);
 		// 목록데이터를 모델로 추가
 		List<ProductVO> pro_list = adProductService.pro_list(cri);
 		
 		// 날짜폴더의 역슬래시를 슬래시로 바꾸는 작업
-		// (역슬래시로 되어있는 정보가 스프링으로 보내는 요청데이터에 사용되면 에러발생)
+		// (브라우저에서 역슬래시로 되어있는 정보가 스프링으로 전달되면 과정에서 에러발생)
+		// 자바스크립트에서도 처리할 수 있다.
 		pro_list.forEach(vo -> {
 			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
 		});
-		model.addAttribute("pro_list", pro_list);
+		model.addAttribute("pro_list", pro_list); // jsp에서 사용하기위해 Model을 추가
 		
 		int totalCount = adProductService.getTotalCount(cri);
 		model.addAttribute("pageMaker", new PageDTO(cri, totalCount));
+	}
+	
+	// 상품리스트에서 보여줄 이미지
+	@ResponseBody // ajax로 요청을 받는다. <img src="매핑주소"> 형태로 받겠다
+	@GetMapping("/imageDisplay") // "/admin/product/imageDisplay?dateFolderName=값1&fileName=값2"
+	public ResponseEntity<byte[]> imageDisplay(String dateFolderName, String fileName) throws Exception {
+		
+		return FileUtils.getFile(uploadPath + dateFolderName, fileName);
 	}
 }
