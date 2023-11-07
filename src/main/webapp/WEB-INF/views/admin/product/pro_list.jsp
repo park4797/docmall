@@ -4,10 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
+
 <html>
 <head>
   <meta charset="utf-8">
@@ -19,26 +16,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <%@ include file="/WEB-INF/views/admin/include/plugin1.jsp" %>
   
 </head>
-<!--
-BODY TAG OPTIONS:
-=================
-Apply one or more of the following classes to get the
-desired effect
-|---------------------------------------------------------|
-| SKINS         | skin-blue                               |
-|               | skin-black                              |
-|               | skin-purple                             |
-|               | skin-yellow                             |
-|               | skin-red                                |
-|               | skin-green                              |
-|---------------------------------------------------------|
-|LAYOUT OPTIONS | fixed                                   |
-|               | layout-boxed                            |
-|               | layout-top-nav                          |
-|               | sidebar-collapse                        |
-|               | sidebar-mini                            |
-|---------------------------------------------------------|
--->
+
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
@@ -70,7 +48,7 @@ desired effect
             </div>
 
             <div class="box-body">
-              <div>
+              <div> <!-- 검색어 작업 -->
                 <form action="/admin/product/pro_list" method="get">
                   <select name="type">
                     <option selected>검색종류선택</option>
@@ -82,6 +60,7 @@ desired effect
                     <option value="NPC" ${pageMaker.cri.type == 'NPC' ? 'selected' : ''}>상품명 or 상품코드 or 제조사</option>
                   </select>
                   <input type="text" name="keyword" value="${pageMaker.cri.keyword}" />
+                  <!-- 검색한 데이터 출력을 위해 pageNum과 amount 값을 필요로 한다. -->
                   <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}" />
                   <input type="hidden" name="amount" value="${pageMaker.cri.amount}" />
                   <button type="submit" class="btn btn-primary">검색</button>
@@ -103,6 +82,7 @@ desired effect
                   <!-- pro_num, cg_code, pro_name, pro_price, pro_discount, pro_publisher, pro_content, pro_up_folder, pro_img, pro_amount, pro_buy, pro_date, pro_updatedate -->
 
                   <!-- jstl 문법작업 -->
+                  <!-- forEach문 내부에서는 id를 사용할 수 없다. -->
                   <c:forEach items="${pro_list}" var="productVO"> <!-- var = ProductVO class 성격이 된다. -->
                     <tr>
                       <td><input type="checkbox" name="check" value="${productVO.pro_num}"></td>
@@ -119,8 +99,8 @@ desired effect
                           <option value="N" ${productVO.pro_buy} == 'N' ? 'selected' : ''>판매불가능</option>
                         </select>
                       </td>
-                      <td><button type="button" class="btn btn-link">수정</button></td>
-                      <td><button type="button" class="btn btn-danger">삭제</button></td>
+                      <td><button type="button" class="btn btn-link" name="btn_edit">수정</button></td>
+                      <td><button type="button" class="btn btn-danger btn_del">삭제</button></td>
                     </tr>
                   </c:forEach>
                 </tbody>
@@ -129,7 +109,8 @@ desired effect
             <div class="box-footer clearfix">
               <div class="row">
                 <div class="col-md-2">
-                  <button class="btn btn-primary" href="#" id="btn_check_modify" role="button">체크상품수정</button>
+                  <button class="btn btn-primary" id="btn_check_modify1" role="button">체크상품수정1</button>
+                  <button class="btn btn-primary" id="btn_check_modify2" role="button">체크상품수정2</button>
                   <!-- 1) 페이지번호 클릭시 사용 [이전] 1 2 3 4 5 [다음], action="/admin/product/list"-->
                   <!-- 2) 목록에서 제목 클릭시 사용, actionForm.setAttribute("action", "/admin/product/get");-->
                   <form id="actionForm" action="" method="get">
@@ -137,7 +118,6 @@ desired effect
                     <input type="hidden" name="amount" id="amount" value="${pageMaker.cri.amount}" />
                     <input type="hidden" name="type" id="type" value="${pageMaker.cri.type}" />
                     <input type="hidden" name="keyword" id="keyword" value="${pageMaker.cri.keyword}" />
-                    <input type="hidden" name="pro_num" id="pro_num" />
                   </form>
                 </div>
                 <div class="col-md-8 text-center">
@@ -145,7 +125,7 @@ desired effect
                     <ul class="pagination">
                       <c:if test="${pageMaker.prev}">
                         <li class="page-item">
-                          <a href="${pageMaker.startPage - 1}" class="page-link movepage">Previous</a>
+                          <a href="${pageMaker.startPage - 1}" class="page-link movepage">Previous</a> <!-- page-link movepage를 주어 페이징에 사용한 태그들을 관리한다 -->
                         </li>
                       </c:if>
                       <!--
@@ -168,9 +148,8 @@ desired effect
                     </ul>
                   </nav>
                 </div>
-                <div class="col-md-2">
-                  <button class="btn btn-primary" href="/admin/product/pro_insert" role="button">상품등록</button>
-                  <button class="btn btn-primary" href="/admin/product/pro_list" role="button">목록</button>
+                <div class="col-md-2 text-right">
+                  <button class="btn btn-primary" id="btn_product_insert" role="button">상품등록</button>
                 </div>
                   
                 </div>
@@ -295,16 +274,16 @@ desired effect
     // 목록에서 제목행 체크박스 선택
     let icCheck = true;
     $("#checkAll").on("click", function() {
+      // checkAll(제목행 체크박스)을 클릭시 name="check"인 input 태그는 체크된다.
       $("input[name='check']").prop("checked", this.checked); // this 는 check
       icCheck = this.checked;
     });
 
     // 목록에서 데이터행 체크박스 선택
     $("input[name='check']").on("click", function() {
-
       // 제목행 체크상태 변경
       $("#checkAll").prop("checked", this.checked);
-
+      
       // 데이터행의 체크박스 상태변경
       $("input[name='check']").each(function() {
         if(!$(this).is(":checked")) {
@@ -313,13 +292,13 @@ desired effect
       });
     });
 
-      // 체크박스수정 버튼 클릭
-      $("#btn_check_modify").on("click", function() {
-        // 체크박스 유무확인
-        if($("input[name='check']:checked").length == 0) {
-          alert("수정할 상품을 체크하세요");
-          return;
-        }
+    // 체크박스수정1 버튼 클릭
+    $("#btn_check_modify1").on("click", function() {
+      // 체크박스 유무확인
+      if($("input[name='check']:checked").length == 0) {
+        alert("수정할 상품을 체크하세요");
+        return;
+      }
       // 배열문법
       let pro_num_arr = []; // 체크된 상품코드 배열
       let pro_price_arr = []; // 체크된 상품가격 배열
@@ -334,9 +313,96 @@ desired effect
       console.log("상품코드", pro_num_arr);
       console.log("상품가격", pro_price_arr);
       console.log("상품유무", pro_buy_arr);
-      })
+
+      $.ajax({
+      url:'/admin/product/pro_checked_modify1', // 체크상품수정 스프링 매핑주소
+      type:'post',
+      data:{pro_num_arr : pro_num_arr, pro_price_arr : pro_price_arr, pro_buy_arr : pro_buy_arr}, // {파라미터명1 : 값1, 파라미터명2 : 값2 ...},
+      dataType:'text', // json, text, xml, html 등
+      success: function(result){
+        if(result == "success"){
+          alert("체크상품이 수정되었습니다.")
+
+          // DB에서 다시 불러오는 작업
+          // 1) location.href="/admin/product/pro_list";
+          /* 2) 현재 리스트 상태로 불러오는 의미
+          actionForm.attr("method", get);
+          actionForm.attr("action", "/admin/product/pro_list");
+          actionForm.submit();
+          */
+        }
+      } 
+      });
+    });
+
+    // 체크박스수정2 버튼 클릭
+    $("#btn_check_modify2").on("click", function() {
+      // 체크박스 유무확인
+      if($("input[name='check']:checked").length == 0) {
+        alert("수정할 상품을 체크하세요");
+        return;
+      }
+      // 배열문법
+      let pro_num_arr = []; // 체크된 상품코드 배열
+      let pro_price_arr = []; // 체크된 상품가격 배열
+      let pro_buy_arr = []; // 체크된 상품진열 배열
+
+      $("input[name='check']:checked").each(function() {
+        pro_num_arr.push($(this).val());
+        pro_price_arr.push($(this).parent().parent().find("input[name='pro_price']").val()); // 첫번째 parent는 td, 두번째 parent는 tr이 된다.
+        pro_buy_arr.push($(this).parent().parent().find("select[name='pro_buy']").val());
+      });
+
+      console.log("상품코드", pro_num_arr);
+      console.log("상품가격", pro_price_arr);
+      console.log("상품유무", pro_buy_arr);
+
+      $.ajax({
+      url:'/admin/product/pro_checked_modify2', // 체크상품수정 스프링 매핑주소
+      type:'post',
+      data:{pro_num_arr : pro_num_arr, pro_price_arr : pro_price_arr, pro_buy_arr : pro_buy_arr}, // {파라미터명1 : 값1, 파라미터명2 : 값2 ...},
+      dataType:'text', // json, text, xml, html 등
+      success: function(result){
+        if(result == "success"){
+          alert("체크상품이 수정되었습니다.")
+
+          // DB에서 다시 불러오는 작업
+          // 1) location.href="/admin/product/pro_list";
+          /* 2) 현재 리스트 상태로 불러오는 의미
+          actionForm.attr("method", get);
+          actionForm.attr("action", "/admin/product/pro_list");
+          actionForm.submit();
+          */
+        }
+      } 
+      });
+    });
   
-  });
+    // 목록페이지에서 상품등록 버튼
+    $("#btn_product_insert").on("click", function() {
+      location.href="/admin/product/pro_insert";
+    });
+
+    // 상품수정
+    $("button[name='btn_edit']").on("click", function() {
+
+      // 수정 상품코드
+      let pro_num = $(this).parent().parent().find("input[name='check']").val();
+      
+      console.log("상품코드", pro_num);
+
+      // 뒤로가기 클릭후 다시 수정버튼 클릭시 코드 중복되는 부분이 있어 삭제작업, 기존 bno를 삭제했던것과 동일
+      actionForm.find("input[name='pro_num']").remove();
+
+      // <input type="hidden" name="pro_num" id="pro_num" />
+      actionForm.append('<input type="hidden" name="pro_num" id="pro_num" value="' + pro_num + '" />');
+
+      actionForm.attr("method", "get");
+      actionForm.attr("action", "/admin/product/pro_edit");
+      actionForm.submit();
+    })
+
+  }); //
 
 </script>
 </body>
