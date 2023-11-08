@@ -134,6 +134,4 @@
 			PRO_NUM = #{pro_num}
  	</delete>
  	
- 	<!-- 상품 등록한 것 읽기 -->
- 	
   </mapper>

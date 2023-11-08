@@ -102,11 +102,11 @@ desired effect
               <label for="title" class="col-sm-2">상품명</label>
               <div class="col-sm-4">
                 <input type="hidden" name="pro_num" value="${productVO.pro_num}" />
-                <input type="text" class="form-control" name="pro_name" id="pro_name" value="${productVO.pro_name}">
+                <input type="text" class="form-control" name="pro_name" id="pro_name" value="${productVO.pro_name}" >
               </div>
               <label for="title" class="col-sm-2">상품가격</label>
               <div class="col-sm-4">
-                <input type="text" class="form-control" name="pro_price" id="pro_price" value="${productVO.pro_price}">
+                <input type="text" class="form-control" name="pro_price" id="pro_price" value="${productVO.pro_price}" >
               </div>
             </div>
 
@@ -139,7 +139,7 @@ desired effect
             <div class="form-group row">
               <label for="title" class="col-sm-2 col-form-label">상품설명</label>
               <div class="col-sm-10">
-                <textarea class="form-control" name="pro_content" id="pro_content" rows="3">${productVO.pro_content}</textarea>
+                <textarea class="form-control" name="pro_content" id="pro_content" rows="3" >${productVO.pro_content}</textarea>
               </div>
             </div>
 
@@ -152,7 +152,7 @@ desired effect
               <div class="col-sm-4">
                 <select class="form-control" id="pro_buy" name="pro_buy">
                   <!-- value값이 없으면 "판매가능", "판매불가능"이 값으로 들어간다 -->
-                  <option value="Y"  ${productVO.pro_buy == 'Y' ? 'selected':''}">판매가능</option>
+                  <option value="Y" ${productVO.pro_buy == 'Y' ? 'selected':''}">판매가능</option>
                   <option value="N" ${productVO.pro_buy == 'N' ? 'selected':''}">판매불가능</option>
                 </select>
               </div>
@@ -165,7 +165,7 @@ desired effect
               </div>
               <div class="text-center">
                 <button type="submit" class="btn btn-primary">상품수정</button>
-                <button type="button" class="btn btn-primary" name="cancle">취소</button>
+                <button type="button" class="btn btn-primary" name="cancle">목록</button>
               </div>
             </div>
             </form>
@@ -335,10 +335,6 @@ desired effect
             $("#img_preview").attr("src", event.target.result);
           }
         });
-
-        $("input[name='cancle']").on("click", function() {
-          location.href="/admin/product/pro_list";
-        })
 
   });//
 </script>

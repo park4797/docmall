@@ -301,6 +301,7 @@ public class AdProductController {
 			vo.setPro_up_folder(dateFolder);
 			
 		}
+		
 		// DB 연동작업
 		adProductService.pro_edit_ok(vo);
 		
@@ -316,5 +317,4 @@ public class AdProductController {
 		return "redirect:/admin/product/pro_list" + cri.getListLink();
 	}
 	
-
 }

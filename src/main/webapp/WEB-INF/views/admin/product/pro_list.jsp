@@ -87,8 +87,8 @@
                       <td><input type="checkbox" name="check" value="${productVO.pro_num}"></td>
                       <td>${productVO.pro_num}</td>
                       <td>
-                          <a class="move click_get" href="#" data-bno="${productVO.pro_num}"><img src="/admin/product/imageDisplay?dateFolderName=${productVO.pro_up_folder}&fileName=s_${productVO.pro_img}"></a>
-                          <a class="move pro_name click_get" href="#" data-bno="${productVO.pro_num}">${productVO.pro_name}</a>
+                          <a class="move" href="#" data-bno="${productVO.pro_num}"><img src="/admin/product/imageDisplay?dateFolderName=${productVO.pro_up_folder}&fileName=s_${productVO.pro_img}"></a>
+                          <a class="move pro_name" href="#" data-bno="${productVO.pro_num}">${productVO.pro_name}</a>
                       </td>
                       <td><input type="text" name="pro_price" value="${productVO.pro_price}"></td>
                       <td><fmt:formatDate value="${productVO.pro_date}" pattern="yyyy-MM-dd" /></td>
@@ -423,10 +423,6 @@
       actionForm.attr("action", "/admin/product/pro_delete");
       actionForm.submit();
     });
-
-    $(".click_get").on("click", function() {
-      location.href="/admin/product/pro_get";
-    })
 
   }); //
 
