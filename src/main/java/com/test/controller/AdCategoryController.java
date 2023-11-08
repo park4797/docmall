@@ -44,5 +44,7 @@ public class AdCategoryController {
 		// list 객체 -> JSON 로 변환하는 라이브러리 기능 사용. (jackson-databind 라이브러리)
 		
 		return entity;
+		
+		
 	}
 }

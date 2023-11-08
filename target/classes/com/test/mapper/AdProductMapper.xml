@@ -107,13 +107,33 @@
 			PRO_NUM = #{pro_num}
  	</select>
  	
- 	<!-- 상품테이블의 2차카테고리 코드의 1차카테고리 정보 -->
- 	<select id="get" resultType="com.test.domain.CategoryVO" parameterType="Integer">
- 		SELECT
- 			CG_CODE, CG_PARENT_CODE, CG_NAME
-		FROM
-			CATEGORY_TBL
+ 	<!-- 상품수정 -->
+ 	<update id="pro_edit_ok" parameterType="com.test.domain.ProductVO">
+ 		UPDATE
+ 			PRODUCT_TBL
+ 		SET
+ 			CG_CODE = #{cg_code},
+ 			PRO_NAME = #{pro_name},
+ 			PRO_PRICE = #{pro_price},
+ 			PRO_DISCOUNT = #{pro_discount},
+ 			PRO_PUBLISHER = #{pro_publisher},
+ 			PRO_CONTENT = #{pro_content},
+ 			PRO_UP_FOLDER = #{pro_up_folder},
+ 			PRO_IMG = #{pro_img},
+ 			PRO_AMOUNT = #{pro_amount},
+ 			PRO_BUY = #{pro_buy},
+ 			PRO_UPDATEDATE = SYSDATE
 		WHERE
-			CG_CODE = #{cg_code}
- 	</select>
+			PRO_NUM = #{pro_num}
+ 	</update>
+ 	
+ 	<delete id="pro_delete" parameterType="Integer">
+ 		DELETE FROM
+ 			PRODUCT_TBL
+		WHERE
+			PRO_NUM = #{pro_num}
+ 	</delete>
+ 	
+ 	<!-- 상품 등록한 것 읽기 -->
+ 	
   </mapper>

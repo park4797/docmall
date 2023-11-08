@@ -139,4 +139,22 @@ public class FileUtils {
 		return entity;
 	}
 	
+	// 파일삭제
+	/*
+	 String uploadPath : 업로드된 탐색기 경로 sevlet-context.xml의 uploadPath bean 정보를 사용
+	 String folderName : 날자 폴더
+	 String fileName : 실제 파일명
+	 */
+	public static void deleteFile(String uploadPath, String folderName, String fileName) {
+		
+		// File.separatorChar : 배포된 서버의 운영체제에서 사용하는 파일의 경로구분자
+		// ex) 윈도우즈 : \ 리눅스 : / 
+		
+		// 1) 원본이미지 삭제 (DB부분의 날짜데이터의 뒤에 /가 없기때문에 / 추가)
+		new File((uploadPath + folderName + "\\" + fileName).replace('\\', File.separatorChar)).delete();
+		
+		// 2) 썸네일이미지 삭제
+		new File((uploadPath + folderName + "\\" + "s_" + fileName).replace('\\', File.separatorChar)).delete();
+	}
+	
 }

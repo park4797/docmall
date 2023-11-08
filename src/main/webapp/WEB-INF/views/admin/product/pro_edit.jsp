@@ -52,10 +52,9 @@ desired effect
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>한글</h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-        <li class="active">Here</li>
+       <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+        <li class="active">Here</li> 
       </ol>
     </section>
 
@@ -66,7 +65,13 @@ desired effect
     		<div class="col-md-12"> <!-- <tr> 하나에 <td>를 하나만 쓰겠다는 의미 -->
     			<div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title mt-5">Product Edit</h3> <!-- mt-5 : bootstrap의 margin-top -->
+              <h3 class="box-title mt-5">Product Edit</h3>
+              <form id="actionForm" action="" method="get">
+                <input type="hidden" name="pageNum" id="pageNum" value="${cri.pageNum}" />
+                <input type="hidden" name="amount" id="amount" value="${cri.amount}" />
+                <input type="hidden" name="type" id="type" value="${cri.type}" />
+                <input type="hidden" name="keyword" id="keyword" value="${cri.keyword}" />
+              </form>
             </div>
           
           <!--form 태그내에 input type="file"이 존재하면 enctype 추가-->
@@ -86,6 +91,9 @@ desired effect
                 <!-- name과 ProductVO의 변수명이 일치해야 한다. -->
                 <select class="form-control" id="secondCategory" name="cg_code">
                   <option>2차 카테고리 선택</option>
+                  <c:forEach items="${second_categoryList}" var="categoryVO">
+                  	<option value="${categoryVO.cg_code}" ${categoryVO.cg_code == productVO.cg_code ? 'selected' : ''}>${categoryVO.cg_name}</option>
+                  </c:forEach>
                 </select>
               </div>
             </div>
@@ -93,6 +101,7 @@ desired effect
             <div class="form-group row">
               <label for="title" class="col-sm-2">상품명</label>
               <div class="col-sm-4">
+                <input type="hidden" name="pro_num" value="${productVO.pro_num}" />
                 <input type="text" class="form-control" name="pro_name" id="pro_name" value="${productVO.pro_name}">
               </div>
               <label for="title" class="col-sm-2">상품가격</label>
@@ -104,7 +113,7 @@ desired effect
             <div class="form-group row">
               <label for="title" class="col-sm-2">할인율</label>
               <div class="col-sm-4">
-                <input type="text" class="form-control" name="pro_discount" id="pro_discount" placeholder="할인율 입력">
+                <input type="text" class="form-control" name="pro_discount" id="pro_discount" value="${productVO.pro_discount}">
               </div>
               <label for="title" class="col-sm-2">제조사</label>
               <div class="col-sm-4">
@@ -116,10 +125,14 @@ desired effect
               <label for="title" class="col-sm-2">상품이미지</label>
               <div class="col-sm-4">
                 <input type="file" class="form-control" name="uploadFile" id="uploadFile">
+
+                <!-- 상품이미지 변경시 기존이미지 삭제를 위해 사용된다. -->
+                <input type="hidden" name="pro_img" value="${productVO.pro_img}">
+                <input type="hidden" name="pro_up_folder" value="${productVO.pro_up_folder}">
               </div>
               <label for="title" class="col-sm-2">미리보기 이미지</label>
               <div class="col-sm-4">
-                <img id="img_preview" style="width:200px; height:200px;">
+                <img id="img_preview" src="/admin/product/imageDisplay?dateFolderName=${productVO.pro_up_folder}&fileName=${productVO.pro_img}">
               </div>
             </div>
 
@@ -139,8 +152,8 @@ desired effect
               <div class="col-sm-4">
                 <select class="form-control" id="pro_buy" name="pro_buy">
                   <!-- value값이 없으면 "판매가능", "판매불가능"이 값으로 들어간다 -->
-                  <option value="${productVO.pro_buy == 'Y' ? 'selected':''}">판매가능</option>
-                  <option value="${productVO.pro_buy == 'N' ? 'selected':''}">판매불가능</option>
+                  <option value="Y"  ${productVO.pro_buy == 'Y' ? 'selected':''}">판매가능</option>
+                  <option value="N" ${productVO.pro_buy == 'N' ? 'selected':''}">판매불가능</option>
                 </select>
               </div>
             </div>
@@ -151,7 +164,7 @@ desired effect
                 <ul class="uploadedList"></ul>
               </div>
               <div class="text-center">
-                <button type="submit" class="btn btn-primary">상품등록</button>
+                <button type="submit" class="btn btn-primary">상품수정</button>
                 <button type="button" class="btn btn-primary" name="cancle">취소</button>
               </div>
             </div>
