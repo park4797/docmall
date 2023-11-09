@@ -165,7 +165,7 @@ desired effect
               </div>
               <div class="text-center">
                 <button type="submit" class="btn btn-primary">상품수정</button>
-                <button type="button" class="btn btn-primary" name="cancle">목록</button>
+                <button type="button" class="btn btn-primary" name="btn_cancle">목록</input>
               </div>
             </div>
             </form>
@@ -335,6 +335,10 @@ desired effect
             $("#img_preview").attr("src", event.target.result);
           }
         });
+
+        $("button[name='btn_cancle']").on("click", function() {
+          location.href="/admin/product/pro_list";
+        })
 
   });//
 </script>

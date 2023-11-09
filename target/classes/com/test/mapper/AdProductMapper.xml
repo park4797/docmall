@@ -37,14 +37,14 @@
  	<!-- CDATA section -->
  	<select id="pro_list" resultType="com.test.domain.ProductVO" parameterType="com.test.dto.Criteria">
 		<![CDATA[
-		select
+		SELECT
 			PRO_NUM, CG_CODE, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY, PRO_DATE, PRO_UPDATEDATE
-		from (
-		      select /*+INDEX_DESC(PRODUCT_TBL PK_PRO_NUM) */
+		FROM (
+		      SELECT /*+INDEX_DESC(PRODUCT_TBL PK_PRO_NUM) */
 		      	rownum rn, PRO_NUM, CG_CODE, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY, PRO_DATE, PRO_UPDATEDATE
-		      from 
+		      FROM 
 		      	PRODUCT_TBL
-		      where
+		      WHERE
 		      ]]>
 		      <!-- refid : reference id -->
 		      <include refid="criteria"></include>
@@ -52,7 +52,7 @@
 		      <![CDATA[
 		      rownum <= #{pageNum} * #{amount}
 			 )
-		where rn > (#{pageNum} -1) * #{amount}
+		WHERE rn > (#{pageNum} -1) * #{amount}
 		]]>
  	</select>
     

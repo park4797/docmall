@@ -44,9 +44,9 @@
       <property name="dataSource" ref="dataSource"></property>
    </bean>
 
-   <!-- Service 패키지 추가 -->
+   <!-- Service 패키지 추가, bean 생성 조건 -->
    <context:component-scan base-package="com.test.service" />	
    
-   <!-- Mapper 패키지 추가 -->
+   <!-- Mapper 패키지 추가, bean 생성 조건 -->
    <mybatis-spring:scan base-package="com.test.mapper" />
 </beans>
