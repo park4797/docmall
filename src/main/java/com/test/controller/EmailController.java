@@ -38,7 +38,7 @@ public class EmailController {
 		
 		log.info("인증코드 : " + authCode);
 		
-		// 사용자에게 메일로 발급해준 인증코드를 입력시 비교목적으로 세션형태로 미리 저장f
+		// 사용자에게 메일로 발급해준 인증코드를 입력시 비교목적으로 세션형태로 미리 저장
 		session.setAttribute("authCode", authCode);
 		
 		try {
