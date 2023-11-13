@@ -94,8 +94,8 @@
                       <td><fmt:formatDate value="${productVO.pro_date}" pattern="yyyy-MM-dd" /></td>
                       <td>
                         <select id="pro_buy" name="pro_buy">
-                          <option value="Y" ${productVO.pro_buy} == 'Y' ? 'selected' : ''>판매가능</option>
-                          <option value="N" ${productVO.pro_buy} == 'N' ? 'selected' : ''>판매불가능</option>
+                          <option value="Y" ${productVO.pro_buy == 'Y' ? 'selected' : ''}>판매가능</option>
+                          <option value="N" ${productVO.pro_buy == 'N' ? 'selected' : ''}>판매불가능</option>
                         </select>
                       </td>
                       <td><button type="button" class="btn btn-link" name="btn_pro_edit">수정</button></td>
@@ -152,6 +152,7 @@
                 </div>
                   
                 </div>
+                
               </div>
               
 

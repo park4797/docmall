@@ -98,7 +98,7 @@
  		</foreach>
  	</update>
  	
- 	<select id="pro_edit" resultType="com.test.domain.ProductVO" parameterType="Integer">
+ 	<select id="pro_edit" resultType="com.test.domain.ProductVO">
  		SELECT
  			PRO_NUM, CG_CODE, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY, PRO_DATE, PRO_UPDATEDATE
 		FROM

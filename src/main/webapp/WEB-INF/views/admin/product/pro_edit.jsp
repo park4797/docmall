@@ -80,6 +80,10 @@ desired effect
             <div class="form-group row">
               <label for="title" class="col-sm-2">카테고리</label>
               <div class="col-sm-3">
+                <input type="hidden" name="pageNum" id="pageNum" value="${cri.pageNum}" />
+                <input type="hidden" name="amount" id="amount" value="${cri.amount}" />
+                <input type="hidden" name="type" id="type" value="${cri.type}" />
+                <input type="hidden" name="keyword" id="keyword" value="${cri.keyword}" />
                 <select class="form-control" id="firstCategory">
                   <option>1차 카테고리 선택</option>
                   <c:forEach items="${firstCategoryList}" var="categoryVO">
@@ -152,8 +156,8 @@ desired effect
               <div class="col-sm-4">
                 <select class="form-control" id="pro_buy" name="pro_buy">
                   <!-- value값이 없으면 "판매가능", "판매불가능"이 값으로 들어간다 -->
-                  <option value="Y" ${productVO.pro_buy == 'Y' ? 'selected':''}">판매가능</option>
-                  <option value="N" ${productVO.pro_buy == 'N' ? 'selected':''}">판매불가능</option>
+                  <option value="Y" ${productVO.pro_buy == 'Y' ? 'selected':''}>판매가능</option>
+                  <option value="N" ${productVO.pro_buy == 'N' ? 'selected':''}>판매불가능</option>
                 </select>
               </div>
             </div>

@@ -6,8 +6,8 @@
   
 <mapper namespace="com.test.mapper.UserProductMapper">
 
-	<!-- CDATA section 파라미터 2개인거 유념-->
- 	<select id="pro_list" resultType="com.test.domain.ProductVO" parameterType="com.test.dto.Criteria">
+	<!-- CDATA section 파라미터 2개인거 유념(파라미터가 2개 이상일시 map으로 처리)-->
+ 	<select id="pro_list" resultType="com.test.domain.ProductVO" parameterType="map">
 		<![CDATA[
 		select
 			PRO_NUM, CG_CODE, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY, PRO_DATE, PRO_UPDATEDATE
@@ -17,8 +17,8 @@
 		      from 
 		      	PRODUCT_TBL
 		      where
-		      	CG_CODE = #{cg.code}
-		      	AND
+		      	CG_CODE = #{cg_code}
+		      	and
 		      	rownum <= #{cri.pageNum} * #{cri.amount}
 			 )
 		where
@@ -33,6 +33,6 @@
  		FROM
  			PRODUCT_TBL
  		WHERE
- 			CG_CODE = #{cg.code}
+ 			CG_CODE = #{cg_code}
  	</select>
 </mapper>
