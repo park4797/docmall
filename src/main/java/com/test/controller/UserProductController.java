@@ -58,6 +58,7 @@ public class UserProductController {
 		pro_list.forEach(vo -> {
 			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
 		});
+		
 		model.addAttribute("pro_list", pro_list); // jsp에서 사용하기위해 Model을 추가
 		
 		int totalCount = userProductService.getTotalCount(cg_code);

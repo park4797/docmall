@@ -29,7 +29,7 @@
     </c:if>
     
 	    <a class="p-2 text-dark" href="#">Order</a>
-	    <a class="p-2 text-dark" href="#">Cart</a>
+	    <a class="p-2 text-dark" href="/user/cart/cart_list">Cart</a>
 	    
 	    <a class="p-2 text-dark" href="/admin/intro">[Admin]</a>
   </nav>

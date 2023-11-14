@@ -58,11 +58,12 @@
               <p class="card-text">${productVO.pro_name}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" name="btn_cart_add" class="btn btn-sm btn-outline-secondary">Cart</button>
+                  <!--pro_num 값을 받기위해 data로 버튼에 숨겨서 참조했다-->
+                  <button type="button" name="btn_cart_add" data-pro_num="${productVO.pro_num}" class="btn btn-sm btn-outline-secondary">Cart</button>
                   <button type="button" name="btn_buy" class="btn btn-sm btn-outline-secondary">Buy</button>
                 </div>
                 <small class="text-muted">
-                	<fmt:formatNumber type="currencyt" pattern="￦#,###" value="${productVO.pro_price}"></fmt:formatNumber>
+                	<fmt:formatNumber type="currency" pattern="￦#,###" value="${productVO.pro_price}"></fmt:formatNumber>
                 </small>
               </div>
             </div>
@@ -143,7 +144,23 @@
 
       // 장바구니 추가
       $("button[name='btn_cart_add']").on("click", function() {
-        console.log("장바구니 추가");
+        // console.log("장바구니 추가");
+        $.ajax({
+          url : '/user/cart/cart_add',
+          type : 'post',
+          dataType : 'text',
+          data : {pro_num : $(this).data("pro_num"), cart_amount : 1}, // 동일한 변수명으로 보내주어야 한다.
+          // $(this).data("pro_num") 위 data에 추가한 내용
+          success : function(result) {
+            if(result == 'success') {
+              alert("장바구니에 추가되었습니다.");
+              if(confirm("장바구니로 이동하시겠습니까?")) {
+                location.href="/user/cart/cart_list";
+              }
+            }
+          }
+        });
+
       });
 
       // 상품 구매
