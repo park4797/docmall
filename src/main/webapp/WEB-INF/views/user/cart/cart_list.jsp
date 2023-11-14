@@ -55,7 +55,7 @@
         <th scope="col">상품명</th>
         <th scope="col">판매가</th>
         <th scope="col">수량</th>
-        <th scope="col">할인(%)</th>
+        <th scope="col">할인</th>
         <th scope="col">합계</th>
         <th scope="col">비고</th>
       </tr>
@@ -75,7 +75,7 @@
           <input type="number" value="${cartDTO.cart_amount}" style="width: 35px;" name="cart_amount">
           <button type="button" class="btn btn-danger" name="btn_cart_amount_change">변경</button>
         </td>
-        <td><span id="unitDiscount">${cartDTO.pro_discount}</span></td>
+        <td><span id="unitDiscount">${cartDTO.pro_discount * 1/100}</span></td>
         <td><span class="unitTotalPrice" id="unitTotalPrice">${(cartDTO.pro_price - (cartDTO.pro_price * (cartDTO.pro_discount * 1/100))) * cartDTO.cart_amount}</span></td>
         <td><button type="button" class="btn btn-danger">삭제</button></td>
       </tr>
