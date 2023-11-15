@@ -49,7 +49,7 @@
   <table class="table">
     <thead class="thead-dark">
       <tr style="text-align: center;">
-        <th scope="col"><input type="checkbox" id="checkAll"></th>
+        <th scope="col"><input type="checkbox"></th>
         <th scope="col">번호</th>
         <th scope="col">상품</th>
         <th scope="col">상품명</th>
@@ -65,7 +65,7 @@
     <c:forEach items="${cart_list}" var="cartDTO">
       <tr style="text-align: center;">
         <td>
-          <input type="checkbox" name="check" value="${cartDTO.cart_code}">
+          <input type="checkbox" name="cart_code" value="${cartDTO.cart_code}">
         </td>
         <th scope="row">${cartDTO.cart_code}</th>
         <td><img width="80" height="80" src="/user/cart/imageDisplay?dateFolderName=${cartDTO.pro_up_folder}&fileName=${cartDTO.pro_img}"></td>
@@ -86,7 +86,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="12"><button type="button" class="btn btn-danger" id="btn_check_del">선택삭제</button></td>
+        <td colspan="12"><button type="button" class="btn btn-danger">선택삭제</button></td>
       </tr>
       <tr>
         <td colspan="12" style="text-align : right;">
@@ -95,8 +95,6 @@
       </tr>
       <tr>
         <td colspan="12" style="text-align: center;">
-          <button type="button" class="btn btn-primary" id="btn_product">쇼핑계속하기</button>
-          <button type="button" class="btn btn-primary" id="btn_cart_empty">장바구니 비우기</button>
           <button type="button" class="btn btn-primary" id="btn_order">주문하기</button>
         </td>
       </tr>
@@ -198,76 +196,9 @@
         location.href="/user/cart/cart_list_del?cart_code=" + cart_code;
       });
 
-      // 주문정보 페이지
       $("button#btn_order").on("click", function() {
-        location.href = "/user/order/order_info";
+        location.href = "/user/order/orderListInfo";
       })
-
-      // 버튼 기능
-      $("#btn_product").on("click", function() {
-        location.href = "/";
-      })
-
-      // 체크박스 처리
-      // 목록에서 제목행 체크박스 선택
-      let idCheck = true;
-      $("#checkAll").on("click", function() {
-        // checkAll(제목행 체크박스)을 클릭시 name="check"인 input 태그는 체크된다.
-        $("input[name='check']").prop("checked", this.checked); // this 는 check
-        idCheck = this.checked;
-      });
-
-      // 목록에서 데이터행 체크박스 선택
-      $("input[name='check']").on("click", function() {
-        // 제목행 체크상태 변경
-        $("#checkAll").prop("checked", this.checked);
-        
-        // 데이터행의 체크박스 상태변경
-        $("input[name='check']").each(function() {
-          if(!$(this).is(":checked")) {
-            $("#checkAll").prop("checked", false);
-          }
-        });
-      });
-
-      // -----------------------------------------------------------
-      // 체크박스삭제
-      $("#btn_check_del").on("click", function() {
-        // 체크박스 유무확인
-        if($("input[name='check']:checked").length == 0) {
-          alert("삭제할 상품을 체크하세요");
-          return;
-        }
-        // 배열문법
-        let cart_code_arr = []; // 체크된 장바구니코드 배열
-
-        $("input[name='check']:checked").each(function() {
-          cart_code_arr.push($(this).val());
-        });
-
-        // console.log("상품코드", cart_code_arr);
-
-        $.ajax({
-          url:'/user/cart/cart_checked_del', // 체크상품삭제 스프링 매핑주소
-          type:'post',
-          dataType:'text', // json, text, xml, html 등
-          data:{cart_code_arr : cart_code_arr}, // {파라미터명1 : 값1, 파라미터명2 : 값2 ...},
-          success: function(result){
-            if(result == "success"){
-              alert("체크상품이 삭제되었습니다.")
-              location.href = "/user/cart/cart_list";
-              
-              // DB에서 다시 불러오는 작업
-              // 1) location.href="/admin/product/pro_list";
-              /* 2) 현재 리스트 상태로 불러오는 의미
-              actionForm.attr("method", get);
-              actionForm.attr("action", "/admin/product/pro_list");
-              actionForm.submit();
-              */
-            }
-          } 
-        });
-      });
     });//
   </script>
   </body>

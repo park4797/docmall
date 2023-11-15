@@ -67,7 +67,7 @@
               </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#">회원목록</a></li>
+            <li><a href="/admin/member/member_list">회원목록</a></li>
           </ul>
         </li>
         

@@ -41,5 +41,23 @@
 		WHERE
 			CART_CODE = #{cart_code}
   	</update>
+  	
+  	<delete id="cart_list_del" parameterType="Long">
+  		DELETE FROM
+  			CART_TBL
+  		WHERE
+  			CART_CODE = #{cart_code}
+  	</delete>
+  	
+  	<delete id="cart_checked_del">
+	<!--  파라미터로 List컬렉션이 사용될 경우에는 mybatis 구문에서는 collection="list" 사용해야 함. -->
+	  DELETE FROM 
+	     CART_TBL
+	  WHERE
+	     CART_CODE IN
+     <foreach collection="list" item="cart_code" open="(" close=")" separator=",">
+        #{cart_code}
+     </foreach>
+	</delete>
   
   </mapper>

@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.test.domain.CartVO;
@@ -75,6 +76,8 @@ public class CartController {
 			CartDTOList vo = cart_list.get(i);
 			
 			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
+			
+//			vo.setPro_discount(vo.getPro_discount() * 1/100);
 			cart_total_price += ((double)vo.getPro_price() - (vo.getPro_price() * vo.getPro_discount() * 1/100)) * (double)vo.getCart_amount();
 		}
 		
@@ -98,6 +101,51 @@ public class CartController {
 		ResponseEntity<String> entity = null;
 		
 		cartService.cart_amount_change(cart_code, cart_amount);
+		
+		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		
+		return entity;
+	}
+	
+	// 장바구니 개별삭제(ajax 방식)
+	@PostMapping("/cart_list_del")
+	public ResponseEntity<String> cart_list_del(Long cart_code) throws Exception {
+		
+		ResponseEntity<String> entity = null;
+		
+		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		
+		cartService.cart_list_del(cart_code);
+		
+		return entity;
+	}
+	
+	// 장바구니 개별삭제(non_ajax)
+	@GetMapping("/cart_list_del")
+	public String cart_list_del2(Long cart_code) throws Exception {
+		
+		cartService.cart_list_del(cart_code);
+		
+		return "redirect:/user/cart/cart_list";
+	}
+	
+	// 장바구니 선택삭제
+	@PostMapping("/cart_checked_del")
+	public ResponseEntity<String> cart_checked_del(@RequestParam("cart_code_arr[]") List<Long> cart_code_arr) throws Exception {
+		
+		log.info("장바구니코드" + cart_code_arr);
+		
+		// 방법 1) 하나씩 반복적으로 삭제
+		/*
+
+		for(int i=0; i<cart_code_arr.size(); i++) {
+			cartService.cart_checked_del(cart_code_arr);
+		}
+		 */
+		
+		ResponseEntity<String> entity = null;
+		
+		cartService.cart_checked_del(cart_code_arr);
 		
 		entity = new ResponseEntity<String>("success", HttpStatus.OK);
 		

@@ -20,4 +20,10 @@ public interface CartMapper {
 	List<CartDTOList> cart_list(String mbsp_id);
 	
 	void cart_amount_change( @Param("cart_code") Long cart_code, @Param("cart_amount") int cart_amount);
+	
+	// 개별삭제
+	void cart_list_del(Long cart_code);
+	
+	// 체크상품 삭제
+	void cart_checked_del(List<Long> cart_code_arr);
 }

@@ -262,16 +262,19 @@ CREATE TABLE PRODUCT_TBL(
         PRO_UP_FOLDER       VARCHAR2(50)             NOT NULL,
         PRO_IMG             VARCHAR2(200)             NOT NULL,  -- 날짜폴더경로가 포함하여 파일이름저장
         PRO_AMOUNT          NUMBER                  NOT NULL,
-        PRO_BUY             VARCHAR2(10)            NOT NULL,
+        PRO_BUY             CHAR(1)            NOT NULL, -- Y OR N
         PRO_DATE            DATE DEFAULT SYSDATE    NOT NULL,
         PRO_UPDATEDATE      DATE DEFAULT SYSDATE    NOT NULL,
         FOREIGN KEY(CG_CODE) REFERENCES CATEGORY_TBL(CG_CODE)
 );
 
+SELECT * FROM PRODUCT_TBL;
+
 pro_num, CG_CODE, pro_name, pro_price, pro_discount, pro_publisher, pro_content, pro_up_folder, pro_img, pro_amount, pro_buy, pro_date, pro_updatedate
 
 -- 상품테이블의 상품코드 컬럼에 사용목적으로 생성 (PRO_NUM)
 CREATE SEQUENCE SEQ_PRODUCT_TBL;
+DELETE SEQUENCE SEQ_PRODUCT_TBL;
 
 -- 상품마다 이미지의 개수가 다를 경우 별도의 테이블을 구성(권장)
 -- 상품설명 컬럼에 웹에디터를 이용한 태그코드 내용이 저장된다.
@@ -398,22 +401,22 @@ CREATE TABLE CART_TBL(
         CART_AMOUNT      NUMBER          NOT NULL,
         FOREIGN KEY(PRO_NUM) REFERENCES PRODUCT_TBL(PRO_NUM),
         FOREIGN KEY(MBSP_ID) REFERENCES MBSP_TBL(MBSP_ID),
-        CONSTRAINT PK_CART_CODE primary key(CART_CODE) 
+        CONSTRAINT PK_CART_CODE PRIMARY KEY(CART_CODE) 
 );
 
 create sequence seq_cart_code;
 
 -- 장바구니에 로그인 사용자가 상품을 추가시, 존재 할경우는 수량변경, 존재 하지않는 경우 장바구니 추가(담기)
 
-merge into cart_tbl
-using dual
-on (MBSP_ID = 'id값' and PRO_NUM = '상품코드')
-when matched then
-    update
-        set CART_AMOUNT = CART_AMOUNT + 수량
-when not matched then
-    insert(cart_code, pro_num, mbsp_id, cart_amount)
-    values(seq_cart_code.nextval,#{pro_num},#{mbsp_id},#{cart_amount})
+MERGE INTO CART_TBL
+USING DUAL
+ON (MBSP_ID = 'id값' AND PRO_NUM = '상품코드')
+WHEN MATCHED THEN
+    UPDATE
+        SET CART_AMOUNT = CART_AMOUNT + 수량
+WHEN NOT MATCHED THEN
+    INSERT(CART_CODE, PRO_NUM, MBSP_ID, CART_AMOUNT)
+    VALUES(SEQ_CART_CODE.NEXTVAL,#{PRO_NUM},#{MBSP_ID},#{CART_AMOUNT})
 
 
 
@@ -466,6 +469,9 @@ COMMIT;
 */
 -- 장바구니 리스트 조회
 
+SELECT C.CART_CODE, C.PRO_NUM, C.CART_AMOUNT, P.PRO_UP_FOLDER, P.PRO_IMG, P.PRO_PUBLISHER, P.PRO_NAME, P.PRO_PRICE, P.PRO_DISCOUNT FROM
+PRODUCT_TBL P INNER JOIN CART_TBL C ON P.PRO_NUM = C.PRO_NUM
+WHERE C.MBSP_ID = 'user01';
 
 
 
@@ -512,16 +518,19 @@ DELETE FROM cart_tbl WHERE mbsp_id = 'user01';
 */
 DROP TABLE ORDER_TBL;
 --5.주문내용 테이블
+-- 주문자에 대한 정보(중복되는 데이터가 많아 테이블을 분리했다) 
 CREATE TABLE ORDER_TBL(
         ORD_CODE            NUMBER                  PRIMARY KEY,
         MBSP_ID             VARCHAR2(15)            NOT NULL,
         ORD_NAME            VARCHAR2(30)            NOT NULL,
-        ORD_ADDR_NUM        CHAR(5)                 NOT NULL,
+        ORD_ZIPCODE         CHAR(5)                 NOT NULL,
         ORD_ADDR_BASIC      VARCHAR2(50)            NOT NULL,
         ORD_ADDR_DETAIL     VARCHAR2(50)            NOT NULL,
         ORD_TEL             VARCHAR2(20)            NOT NULL,
         ORD_PRICE           NUMBER                  NOT NULL,  -- 총주문금액. 선택
         ORD_REGDATE         DATE DEFAULT SYSDATE    NOT NULL,
+        ORD_STATUS          VARCHAR2(20)            NOT NULL,
+        PARYMENT_STATUS     VARCHAR2(20)            NOT NULL,
         FOREIGN KEY(MBSP_ID) REFERENCES MBSP_TBL(MBSP_ID)
 );
 
@@ -532,6 +541,7 @@ values
 
 DROP TABLE ORDETAIL_TBL;
 --6.주문상세 테이블
+-- 주문상품이 저장될 테이블
 CREATE TABLE ORDETAIL_TBL(
         ORD_CODE        NUMBER      NOT NULL REFERENCES ORDER_TBL(ORD_CODE),
         PRO_NUM         NUMBER      NOT NULL REFERENCES PRODUCT_TBL(PRO_NUM),
@@ -807,15 +817,49 @@ FROM (
     )
 WHERE RN >=4 AND RN <=6;
 
+UPDATE PRODUCT_TBL
+SET PRO_PRICE = #{PRO_PRICE}, PRO_BUY = #{PRO_BUY}
+WHERE PRO_NUM = #{PRO_NUM}
 
+UPDATE PRODUCT_TBL SET PRO_PRICE = #{PRO_PRICE}, PRO_BUY = #{PRO_BUY} WHERE PRO_NUM = #{PRO_NUM}
+UPDATE PRODUCT_TBL SET PRO_PRICE = #{PRO_PRICE}, PRO_BUY = #{PRO_BUY} WHERE PRO_NUM = #{PRO_NUM}
+UPDATE PRODUCT_TBL SET PRO_PRICE = #{PRO_PRICE}, PRO_BUY = #{PRO_BUY} WHERE PRO_NUM = #{PRO_NUM}
 
+declare
+begin
+    UPDATE PRODUCT_TBL SET PRO_PRICE = 25000, PRO_BUY = 'Y' WHERE PRO_NUM = 5;
+    UPDATE PRODUCT_TBL SET PRO_PRICE = 50000, PRO_BUY = 'N' WHERE PRO_NUM = 4;
+end;
 
+SQL>  DECLARE
+    2       vi_num NUMBER;
+    3     BEGIN
+    4       vi_num := 100; -- := 가 값을 할당
+    5
+    6       DBMS_OUTPUT.PUT_LINE(vi_num);
+    7     END;
+    8     /
 
+SELECT PRO_NUM, CG_CODE, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY, PRO_DATE, PRO_UPDATEDATE
+FROM PRODUCT_TBL
+WHERE PRO_NUM = ?;
 
+-- 2차카테고리의 8의 부모(1차카테고리 정보)
+SELECT CG_CODE, CG_PARENT_CODE, CG_NAME
+FROM CATEGORY_TBL
+WHERE CG_CODE = 8;
 
+-- Top (1) 을 부모로 둔 하위 2차 카테고리
+SELECT CG_CODE, CG_PARENT_CODE, CG_NAME
+FROM CATEGORY_TBL
+WHERE CG_PARENT_CODE = 1;
 
+update product_tbl set cg_code =, PRO_NAME = , PRO_DISCOUNT = , PRO_IMG = , PRO_BUY = , PRO_CONTENT = , PRO_PUBLISHER = , PRO_AMOUNT = , PRO_UP_FOLDER = , PRO_PRICE = , PRO_UPDATEDATE = sysdate
+where pro_num = ;
 
+-- 상품삭제
+DELETE * FROM product_tbl
+where pro_num = ?;
 
-
-
-
+SELECT PRO_NUM, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY, PRO_DATE
+FROM PRODUCT_TBL
