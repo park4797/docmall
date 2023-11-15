@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.test.mapper.UserProductMapper">
+
+	<!-- CDATA section 파라미터 2개인거 유념(파라미터가 2개 이상일시 map으로 처리)-->
+ 	<select id="pro_list" resultType="com.test.domain.ProductVO" parameterType="map">
+		<![CDATA[
+		select
+			PRO_NUM, CG_CODE, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY, PRO_DATE, PRO_UPDATEDATE
+		from (
+		      select /*+INDEX_DESC(PRODUCT_TBL PK_PRO_NUM) */
+		      	rownum rn, PRO_NUM, CG_CODE, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY, PRO_DATE, PRO_UPDATEDATE
+		      from 
+		      	PRODUCT_TBL
+		      where
+		      	CG_CODE = #{cg_code}
+		      	and
+		      	rownum <= #{cri.pageNum} * #{cri.amount}
+			 )
+		where
+			rn > (#{cri.pageNum} -1) * #{cri.amount}
+		]]>
+ 	</select>
+    
+    <!-- 2차카테고리에 해당하는 수 -->
+ 	<select id="getTotalCount" resultType="int">
+ 		SELECT
+ 			COUNT(*)
+ 		FROM
+ 			PRODUCT_TBL
+ 		WHERE
+ 			CG_CODE = #{cg_code}
+ 	</select>
+</mapper>
