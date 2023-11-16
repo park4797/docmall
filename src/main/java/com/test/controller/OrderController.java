@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.test.domain.MemberVO;
+import com.test.domain.OrderDetailVO;
+import com.test.domain.OrderVO;
+import com.test.domain.PaymentVO;
 import com.test.dto.CartDTOList;
+import com.test.kakaopay.ReadyResponse;
 import com.test.service.CartService;
 import com.test.service.OrderService;
 import com.test.util.FileUtils;
@@ -27,9 +31,6 @@ import lombok.extern.log4j.Log4j;
 @RequiredArgsConstructor
 public class OrderController {
 
-	@Resource(name="uploadPath") // servlet-context.xml 의 bean 이름 참조를 해야 한다.
-	private String uploadPath;
-	
 	private final CartService cartService;
 	
 	private final OrderService orderService;
@@ -69,10 +70,28 @@ public class OrderController {
 		model.addAttribute("order_price", order_total_price);
 	}
 	
-	@ResponseBody // ajax로 요청을 받는다. <img src="매핑주소"> 형태로 받겠다
-	@GetMapping("/imageDisplay") // "/user/product/imageDisplay?dateFolderName=값1&fileName=값2"
-	public ResponseEntity<byte[]> imageDisplay(String dateFolderName, String fileName) throws Exception {
+	// 카카오페이 결제선택
+	@GetMapping(value = "/orderPay", produces = "application/json")
+	public @ResponseBody ReadyResponse payReady(OrderVO o_vo, OrderDetailVO od_vo, PaymentVO p_vo, int totalamount, HttpSession session) throws Exception {
 		
-		return FileUtils.getFile(uploadPath + dateFolderName, fileName);
+		return null;
+	}
+	
+	// 결제 성공시. http://localhost:9090/user/order/orderApproval
+	@GetMapping("/orderApproval")
+	public void orderApproval() {
+		
+	}
+	
+	// 결제 취소시 http://localhost:9090/user/order/orderCancel
+	@GetMapping("/orderCancel")
+	public void orderCancel() {
+		
+	}
+	
+	// 결제 실패시 http://localhost:9090/user/order/orderFail
+	@GetMapping("/orderFail")
+	public void orderFail() {
+		
 	}
 }

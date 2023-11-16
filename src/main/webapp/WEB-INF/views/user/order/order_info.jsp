@@ -84,53 +84,59 @@
   <!-- 주문자정보 입력 폼 -->
   <div class="box box-primary">
     <form role="form" id="" method="post" action="">
-      <fieldset>
+      <fieldset id="">
         <legend>주문하시는 분</legend>
         <hr>
 
           <div class="box-body">
             <div class="form-group row">
-              <label for="mbsp_id" class="col-2">주문자ID</label>
+              <label for="mbsp_id" class="col-2">주문자</label>
               <div class="col-10">
-                <input type="text" class="form-control" name="mbsp_id" id="mbsp_id" placeholder="주문자 입력">
+                <input type="text" class="form-control" id="b_mbsp_id" value="${loginStatus.mbsp_id}" readonly>
               </div>
             </div>
 
             <div class="form-group row">
-              <label for="ord_name" class="col-2">주문자</label>
+              <label for="ord_name" class="col-2">이름</label>
               <div class="col-10">
-                <input type="text" class="form-control" name="ord_name" id="ord_name" placeholder="이름을 입력">
+                <input type="text" class="form-control" id="b_mbsp_name" value="${loginStatus.mbsp_name}" readonly>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="" class="col-2">이메일</label>
+              <div class="col-10">
+                <input type="text" class="form-control" id="b_mbsp_email" value="${loginStatus.mbsp_email}" readonly>
               </div>
             </div>
 
             <div class="form-group row">
               <label for="" class="col-2">우편번호</label>
-              <div class="col-8">
-                <input type="text" class="form-control" name="ord_zipcode" id="" placeholder="우편번호 입력">
+              <div class="col-10">
+                <input type="text" class="form-control" id="b_mbsp_zipcode" value="${loginStatus.mbsp_zipcode}" readonly>
               </div>
             </div>
 
             <div class="form-group row">
               <label for="" class="col-2">기본주소</label>
               <div class="col-10">
-                <input type="text" class="form-control" name="ord_addr_basic" id="" placeholder="주소를 입력">
+                <input type="text" class="form-control" id="b_mbsp_addr" value="${loginStatus.mbsp_addr}" readonly>
               </div>
             </div>
 
             <div class="form-group row">
               <label for="" class="col-2">상세주소</label>
               <div class="col-10">
-                <input type="text" class="form-control" name="ord_addr_detail" id="" placeholder="상세주소 입력">
+                <input type="text" class="form-control" id="b_mbsp_deaddr" value="${loginStatus.mbsp_deaddr}" readonly>
               </div>
             </div>
             
             <div class="form-group row">
               <label for="ord_tel" class="col-2">핸드폰</label>
               <div class="col-10">
-                <input type="text" class="form-control" name="ord_tel" id="ord_tel" placeholder="번호 입력">
+                <input type="text" class="form-control" id="b_mbsp_phone" value="${loginStatus.mbsp_phone}" readonly>
               </div>
             </div>
-
           </div>
       
       </fieldset>
@@ -138,28 +144,28 @@
       <fieldset>
         <legend>받으시는 분</legend>
         <div style="text-align: center;">
-          <input type="checkbox">주문자와 동일
+          <input type="checkbox" id="same">주문자와 동일
         </div>
         <hr>
         <div class="box-body">
           <div class="form-group row">
-            <label for="mbsp_id" class="col-2">주문자ID</label>
+            <label for="mbsp_name" class="col-2">수령자</label>
             <div class="col-8">
-              <input type="text" class="form-control" name="mbsp_id" id="mbsp_id" placeholder="주문자 입력">
+              <input type="text" class="form-control" name="mbsp_name" id="mbsp_name" placeholder="이름을 입력">
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="ord_name" class="col-2">수령인</label>
+            <label for="mbsp_email" class="col-2">이메일</label>
             <div class="col-10">
-              <input type="text" class="form-control" name="ord_name" id="ord_name" placeholder="이름을 입력">
+              <input type="text" class="form-control" name="mbsp_email" id="mbsp_email" placeholder="이메일을 입력">
             </div>
           </div>
 
           <div class="form-group row">
             <label for="sample2_postcode" class="col-2">우편번호</label>
             <div class="col-8">
-              <input type="text" class="form-control" name="ord_zipcode" id="sample2_postcode" placeholder="우편번호 입력">
+              <input type="text" class="form-control" name="mbsp_zipcode" id="sample2_postcode" placeholder="우편번호 입력">
             </div>
             <div class="col-2">
               <button type="button" onclick="sample2_execDaumPostcode()" class="btn btn-outline-info">우편번호 찾기</button>
@@ -169,22 +175,22 @@
           <div class="form-group row">
             <label for="sample2_address" class="col-2">기본주소</label>
             <div class="col-10">
-              <input type="text" class="form-control" name="ord_addr_basic" id="sample2_address" placeholder="주소를 입력">
+              <input type="text" class="form-control" name="mbsp_addr" id="sample2_address" placeholder="주소를 입력">
             </div>
           </div>
 
           <div class="form-group row">
             <label for="sample2_detailAddress" class="col-2">상세주소</label>
             <div class="col-10">
-              <input type="text" class="form-control" name="ord_addr_detail" id="sample2_detailAddress" placeholder="상세주소 입력">
+              <input type="text" class="form-control" name="mbsp_deaddr" id="sample2_detailAddress" placeholder="상세주소 입력">
               <input type="hidden" id="sample2_extraAddress" placeholder="참고항목">
             </div>
           </div>
           
           <div class="form-group row">
-            <label for="ord_tel" class="col-2">핸드폰</label>
+            <label for="mbsp_phone" class="col-2">핸드폰</label>
             <div class="col-10">
-              <input type="text" class="form-control" name="ord_tel" id="ord_tel" placeholder="번호 입력">
+              <input type="text" class="form-control" name="mbsp_phone" id="mbsp_phone" placeholder="번호 입력">
             </div>
           </div>
           <hr>
@@ -195,8 +201,8 @@
             <div class="form-group row">
               <label for="ord_tel" class="col-2">결제방법</label>
               <div class="col-10">
-                <input type="radio" name="ord_tel" id="ord_tel">무통장 입금<br>
-                <input type="radio" name="ord_tel" id="ord_tel">카카오페이<br>
+                <input type="radio" name="ord_tel" id="ord_tel">무통장 입금 &nbsp;&nbsp;
+                <input type="radio" name="ord_tel" id="ord_tel">카카오페이 <img src="/resources/image/kakaopay.png" height="30" width="70">
               </div>
             </div>
           </fieldset>
@@ -329,6 +335,28 @@
     // 동적코딩을 할 때 값을 변경하는 작업을 할때는 절차적으로 작업해야 한다.
     $(document).ready(function() {
       fn_cart_sum_price();
+
+      // 수령인과 동일
+      $("#same").on("click", function() {
+
+        if($("#same").is(":checked")) {
+          // console.log("체크");
+
+          $("#mbsp_name").val($("#b_mbsp_name").val());
+          $("#mbsp_email").val($("#b_mbsp_email").val());
+          $("#sample2_postcode").val($("#b_mbsp_zipcode").val());
+          $("#sample2_address").val($("#b_mbsp_addr").val());
+          $("#sample2_detailAddress").val($("#b_mbsp_deaddr").val());
+          $("#mbsp_phone").val($("#b_mbsp_phone").val());
+        } else {
+          $("#mbsp_name").val("");
+          $("#mbsp_email").val("");
+          $("#sample2_postcode").val("");
+          $("#sample2_address").val("");
+          $("#sample2_detailAddress").val("");
+          $("#mbsp_phone").val("");
+        }
+      });
     });//
   </script>
   </body>
