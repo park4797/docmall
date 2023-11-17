@@ -17,4 +17,5 @@ public interface MemberMapper {
 	
 	// 삭제
 	void delete(String mbsp_id);
+	
 }

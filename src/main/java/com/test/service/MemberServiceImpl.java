@@ -45,4 +45,5 @@ public class MemberServiceImpl implements MemberService{
 	public void delete(String mbsp_id) {
 		memberMapper.delete(mbsp_id);
 	}
+
 }

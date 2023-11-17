@@ -5,5 +5,30 @@
   
 <mapper namespace="com.test.mapper.OrderMapper">
 
+	<select id="getOrderSeq" resultType="int">
+		SELECT SEQ_ORD_CODE.NEXTVAL FROM DUAL
+	</select>
+	<insert id="order_insert" parameterType="com.test.domain.OrderVO">
+		INSERT INTO
+			ORDER_TBL
+			(ord_code, mbsp_id, ord_name, ord_zipcode, ord_addr_basic, ord_addr_detail, ord_tel, ord_price, ord_regdate, ord_status, payment_status)
+		VALUES
+			(#{ord_code}, #{mbsp_id}, #{ord_name}, #{ord_zipcode}, #{ord_addr_basic}, #{ord_addr_detail}, #{ord_tel}, #{ord_price}, sysdate, #{ord_status}, #{payment_status})
+	</insert>
+	
+	<insert id="order_detail_insert" parameterType="map">
+		INSERT INTO
+			ORDETAIL_TBL(ORD_CODE, PRO_NUM, DT_AMOUNT, DT_PRICE)
+		SELECT
+			#{ord_code}, c.PRO_NUM, c.CART_AMOUNT, p.PRO_PRICE
+		FROM
+			CART_TBL c inner join PRODUCT_TBL p ON c.pro_num = p.pro_num
+		WHERE
+			MBSP_ID = #{mbsp_id}
+	</insert>
+	
+	<delete id="cart_del" parameterType="String">
+		DELETE FROM CART_TBL WHERE MBSP_ID = #{mbsp_id}
+	</delete>
 	
 </mapper>

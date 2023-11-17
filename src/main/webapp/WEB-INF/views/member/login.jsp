@@ -75,6 +75,8 @@
         
         <div class="box-footer">
           <button type="submit" class="btn btn-primary" id="btnlogin">로그인</button>
+          <button type="button" class="btn btn-primary" id="btn_find_id">아이디찾기</button>
+          <button type="button" class="btn btn-primary" id="btn_find_pw">비밀번호찾기</button>
         </div>
       </form>
     </div>
@@ -84,6 +86,15 @@
   <%@ include file="/WEB-INF/views/comm/footer.jsp"%>
 </div>
 
+  <%@ include file="/WEB-INF/views/comm/plugIn.jsp" %>
+<script>
+  $(document).ready(function() {
+
+    $("#btn_find_id").on("click", function() {
+      location.href = "/member/findId";
+    })
+  });
+</script>
 
 </body>
 </html>

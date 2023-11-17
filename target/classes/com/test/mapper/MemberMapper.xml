@@ -11,7 +11,7 @@
 		FROM
 			MBSP_TBL
 		WHERE
-			MBSP_ID = #{MBSP_ID}	
+			MBSP_ID = #{mbsp_id}	
 	</select>
 
 	<insert id="join" parameterType="com.test.domain.MemberVO">
@@ -65,4 +65,5 @@
 		WHERE
 		    MBSP_ID = #{mpsp_id}
 	</delete>
+	
 </mapper>

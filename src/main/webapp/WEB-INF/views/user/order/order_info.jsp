@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+    <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -60,7 +61,7 @@
       <!--<img width="100%" height="200" src="/user/cart/imageDisplay?dateFolderName=${productVO.pro_up_folder}&fileName=${productVO.pro_img}">-->
     </thead>
     <tbody>
-    <c:forEach items="${order_info}" var="cartDTO">
+    <c:forEach items="${order_info}" var="cartDTO" varStatus="status">
       <tr style="text-align: center;">
         <th scope="row">${cartDTO.cart_code}</th>
         <td><img width="80" height="80" src="/user/cart/imageDisplay?dateFolderName=${cartDTO.pro_up_folder}&fileName=${cartDTO.pro_img}"></td>
@@ -74,8 +75,9 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="12" style="text-align : right;">
-          최종결제금액 : <span id="cart_total_price">${cart_total_price}</span>
+        <!-- model로 받아와서 pro_name을 가져와-->
+        <td colspan="8" style="text-align : right;">${proVO} <span id="cart_price_count"><!--${fn:length(order_info) -1}--></span>
+          최종결제금액 : <span id="cart_total_price">${order_price}</span>
         </td>
       </tr>
     </tfoot>
@@ -199,10 +201,10 @@
             <legend>결제방법 선택</legend>
             <hr>
             <div class="form-group row">
-              <label for="ord_tel" class="col-2">결제방법</label>
+              <label for="paymethod" class="col-2">결제방법</label>
               <div class="col-10">
-                <input type="radio" name="ord_tel" id="ord_tel">무통장 입금 &nbsp;&nbsp;
-                <input type="radio" name="ord_tel" id="ord_tel">카카오페이 <img src="/resources/image/kakaopay.png" height="30" width="70">
+                <input type="radio" name="paymethod" value="nobank" id="paymethod1" style="margin-right: 10px;"><span style="margin-right: 10px;">무통장 입금</span>
+                <input type="radio" name="paymethod" value="kakaopay" id="paymethod2" style="margin-right: 10px;">카카오페이<img src="/resources/image/kakaopay.png" height="30" width="70">
               </div>
             </div>
           </fieldset>
@@ -317,7 +319,8 @@
       }
   </script>
 
-  <%@include file="/WEB-INF/views/comm/plugIn.jsp" %>
+<%@include file="/WEB-INF/views/comm/plugIn.jsp" %>
+
   <!-- 카테고리 메뉴 자바 스크립트 작업. -->
   <script src="/js/category_menu.js"></script>
 
@@ -334,7 +337,7 @@
 
     // 동적코딩을 할 때 값을 변경하는 작업을 할때는 절차적으로 작업해야 한다.
     $(document).ready(function() {
-      fn_cart_sum_price();
+      // fn_cart_sum_price();
 
       // 수령인과 동일
       $("#same").on("click", function() {
@@ -356,6 +359,46 @@
           $("#sample2_detailAddress").val("");
           $("#mbsp_phone").val("");
         }
+      });
+
+      // 주문하기 버튼
+      $("#btn_order").on("click", function() {
+
+        // 1) 주문테이블, 주문상세테이블, 결제테이블에 저장에 필요한 정보구성(OrderVO o_vo, OrderDetailVO od_vo, PaymentVO p_vo)
+        // 2) 카카오페이결제에 필요한 정보구성
+        // 스프링에서 처리할 수 있는 부분
+
+        // console.log("paymethod", $("input[name='paymethod']:checked"));
+        // console.log("ord_name", $("#mbsp_name"));
+        // console.log("ord_zipcode", $("intpu[name='mbsp_zipcode']"));
+        // console.log("ord_addr_basic", $("input[name='mbsp_addr']"));
+        // console.log("ord_addr_detail", $("input[name='mbsp_deaddr']"));
+        // console.log("ord_tel", $("#mbsp_phone"));
+        // console.log("ord_price", $("#cart_total_price"));
+        // console.log("totalamount", $("#cart_total_price"));
+        // return;
+
+        $.ajax({
+          url : '/user/order/orderPay',
+          type : 'get',
+          dataType : 'json',
+          data : {
+            paymethod : $("input[name='paymethod']:checked").val(),
+            ord_name : $("#mbsp_name").val(),
+            ord_zipcode : $("input[name='mbsp_zipcode']").val(),
+            ord_addr_basic : $("input[name='mbsp_addr']").val(),
+            ord_addr_detail : $("input[name='mbsp_deaddr']").val(),
+            ord_tel : $("#mbsp_phone").val(),
+            ord_price : 1000, //$("#cart_total_price").val(),
+            totalprice : 1000 // $("#cart_total_price").val(),
+          },
+          success : function(response) {
+            console.log("응답정보" + response);
+
+            alert(response.next_redirect_pc_url);
+            location.href = response.next_redirect_pc_url;
+          }
+        });
       });
     });//
   </script>

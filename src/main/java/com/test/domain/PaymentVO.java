@@ -8,7 +8,7 @@ import lombok.Data;
 public class PaymentVO {
 
 	private Integer pay_code;
-	private Long odr_code;
+	private Long ord_code;
 	private String mbsp_id;
 	private String pay_method;
 	private Date pay_date;
