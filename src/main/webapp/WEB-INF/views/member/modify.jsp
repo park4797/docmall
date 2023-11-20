@@ -54,7 +54,9 @@
       <form role="form" id="modifyForm" method="post" action="/member/modify">
         <div class="box-body">
           <div class="form-group row">
+            <div>
             <label for="mbsp_id" class="col-2">아이디</label>
+            </div>
             <div class="col-10">
               <input type="text" class="form-control" name="mbsp_id" id="mbsp_id" value="${memberVO.mbsp_id}" readonly>
             </div>

@@ -12,17 +12,20 @@ public class PaymentVO {
 	private String mbsp_id;
 	private String pay_method;
 	private Date pay_date;
-	private int pay_tot_price;
-	private int pay_nobank_price;
-	private int pay_rest_price;
+	private Integer pay_tot_price;
+	
+	private Integer pay_nobank_price;
+
+	// 사용자 입력정보
 	private String pay_nobank_user;
 	private String pay_nobank;
 	private String pay_memo;
+	private String pay_bankaccount;
 	
 }
 
 
-/* pay_code, odr_code, mbsp_id, pay_method, pay_date, pay_tot_price, pay_nobank_price, pay_rest_price, pay_nobank_user, pay_nobank, pay_memo
+/* pay_code, odr_code, mbsp_id, pay_method, pay_date, pay_tot_price, pay_nobank_price, pay_nobank_user, pay_nobank, pay_memo
 CREATE TABLE PAYMENT (
     PAY_CODE            NUMBER          PRIMARY KEY, -- 일련번호
     ODR_CODE            NUMBER          NOT NULL,    -- 주문번호
@@ -31,7 +34,6 @@ CREATE TABLE PAYMENT (
     PAY_DATE            DATE            NULL,        -- 결제일
     PAY_TOT_PRICE       NUMBER          NOT NULL,    -- 결제금액
     PAY_NOBANK_PRICE    NUMBER          NULL,        -- 무통장입금금액
-    PAY_REST_PRICE      NUMBER          NULL,        -- 미지급금
     PAY_NOBANK_USER     VARCHAR2(50)    NULL,        -- 무통장 입금자명
     PAY_NOBANK          VARCHAR2(50)    NULL,        -- 입금은행
     

@@ -31,4 +31,19 @@
 		DELETE FROM CART_TBL WHERE MBSP_ID = #{mbsp_id}
 	</delete>
 	
+	<insert id="payment_insert" parameterType="com.test.domain.PaymentVO">
+		INSERT INTO
+			PAYMENT(PAY_CODE, ORD_CODE, MBSP_ID, PAY_METHOD, PAY_DATE, PAY_TOT_PRICE
+			<if test="pay_nobank_price != null and pay_nobank_price !=''">
+				,PAY_NOBANK_PRICE, PAY_NOBANK_USER, PAY_NOBANK, PAY_MEMO, PAY_BANKACCOUNT
+			</if>
+			)
+		VALUES
+			(SEQ_PAYMENT_CODE.NEXTVAL, #{ord_code}, #{mbsp_id}, #{pay_method}, sysdate, #{pay_tot_price}
+			
+			<if test="pay_nobank_price != null and pay_nobank_price !=''">
+				,#{pay_nobank_price}, #{pay_nobank_user}, #{pay_nobank}, #{pay_memo}, #{pay_bankaccount}
+			</if>
+			)
+	</insert>
 </mapper>

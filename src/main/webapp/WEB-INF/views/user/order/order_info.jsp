@@ -55,7 +55,6 @@
         <th scope="col">상품명</th>
         <th scope="col">판매가</th>
         <th scope="col">수량</th>
-        <th scope="col">할인</th>
         <th scope="col">합계</th>
       </tr>
       <!--<img width="100%" height="200" src="/user/cart/imageDisplay?dateFolderName=${productVO.pro_up_folder}&fileName=${productVO.pro_img}">-->
@@ -68,8 +67,7 @@
         <td>${cartDTO.pro_name}</td>
         <td><span id="unitPrice">${cartDTO.pro_price}</span></td>
         <td>${cartDTO.cart_amount}</td>
-        <td><span id="unitDiscount">${cartDTO.pro_discount * 1/100}</span></td>
-        <td><span class="unitTotalPrice" id="unitTotalPrice">${(cartDTO.pro_price - (cartDTO.pro_price * (cartDTO.pro_discount * 1/100))) * cartDTO.cart_amount}</span></td>
+        <td><span class="unitTotalPrice" id="unitTotalPrice">${cartDTO.pro_price * cartDTO.cart_amount}</span></td>
       </tr>
 	  </c:forEach>
     </tbody>
@@ -197,14 +195,30 @@
           </div>
           <hr>
           
-          <fieldset>
-            <legend>결제방법 선택</legend>
+          <fieldset class="form-group border p-3">
+            <legend class="w-auto px-2">결제방법 선택</legend>
             <hr>
             <div class="form-group row">
               <label for="paymethod" class="col-2">결제방법</label>
               <div class="col-10">
                 <input type="radio" name="paymethod" value="nobank" id="paymethod1" style="margin-right: 10px;"><span style="margin-right: 10px;">무통장 입금</span>
                 <input type="radio" name="paymethod" value="kakaopay" id="paymethod2" style="margin-right: 10px;">카카오페이<img src="/resources/image/kakaopay.png" height="30" width="70">
+              </div>
+            </div>
+
+            <div class="form-group row" id="nobank_info" style="display: none;">
+              <label for="paymethod" class="col-2">무통장 입금정보</label>
+              <div class="col-10">
+                은행명
+                <select name="pay_nobank" id="pay_nobank">
+                  <option value="123-123-1234">KEB하나은행</option>
+                  <option value="456-456-4567">국민은행</option>
+                  <option value="100-100-1000">신한은행</option>
+                  <option value="200-200-2000">SC제일은행</option>
+                </select><br>
+                계좌번호<input type="text" name="pay_bankaccount" id="pay_bankaccount"><br>
+                예금주<input type="text" name="pay_nobank_user" id="pay_nobank_user"><br>
+                메모<textarea cols="50" rows="3" name="pay_memo" id="pay_memo"></textarea>
               </div>
             </div>
           </fieldset>
@@ -325,19 +339,10 @@
   <script src="/js/category_menu.js"></script>
 
   <script>
-    // 전체주문금액
-    function fn_cart_sum_price() {
-      let sumPrice = 0;
-
-      $(".unitTotalPrice").each(function() {
-        sumPrice += Number($(this).text());
-      });
-      $("#cart_total_price").text(sumPrice)
-    }
 
     // 동적코딩을 할 때 값을 변경하는 작업을 할때는 절차적으로 작업해야 한다.
     $(document).ready(function() {
-      // fn_cart_sum_price();
+      let pay_nobank;
 
       // 수령인과 동일
       $("#same").on("click", function() {
@@ -378,6 +383,11 @@
         // console.log("totalamount", $("#cart_total_price"));
         // return;
 
+        // 결제 선택
+        let paymethod = $("input[name='paymethod']:checked").val();
+
+        if(paymethod === 'kakaopay') {
+
         $.ajax({
           url : '/user/order/orderPay',
           type : 'get',
@@ -389,8 +399,8 @@
             ord_addr_basic : $("input[name='mbsp_addr']").val(),
             ord_addr_detail : $("input[name='mbsp_deaddr']").val(),
             ord_tel : $("#mbsp_phone").val(),
-            ord_price : 1000, //$("#cart_total_price").val(),
-            totalprice : 1000 // $("#cart_total_price").val(),
+            ord_price : $("#cart_total_price").text(),
+            totalprice : $("#cart_total_price").text(),
           },
           success : function(response) {
             console.log("응답정보" + response);
@@ -399,7 +409,55 @@
             location.href = response.next_redirect_pc_url;
           }
         });
+        } else if(paymethod === 'nobank'){
+          $.ajax({
+          url : '/user/order/nobank',
+          type : 'get',
+          dataType : 'text',
+          data : {
+            paymethod : $("input[name='paymethod']:checked").val(),
+            ord_name : $("#mbsp_name").val(),
+            ord_zipcode : $("input[name='mbsp_zipcode']").val(),
+            ord_addr_basic : $("input[name='mbsp_addr']").val(),
+            ord_addr_detail : $("input[name='mbsp_deaddr']").val(),
+            ord_tel : $("#mbsp_phone").val(),
+            ord_price : $("#cart_total_price").text(),
+            totalprice : $("#cart_total_price").text(),
+            pay_nobank_user : $("#pay_nobank_user").val(),
+            pay_nobank : $("#pay_nobank option:selected").text(),
+            pay_bankaccount : $("#pay_bankaccount").val(),
+            pay_memo : $("#pay_memo").val(),
+          },
+          success : function(result) {
+            console.log("응답정보" + result);
+
+            if(result == 'success') {
+              alert("무통장입금으로 주문이 완료되었습니다.")
+              location.href = "/user/order/orderComplete";
+            }
+          }
+        });
+        }
       });
+
+      // 무통장 선택시 무통장입력정보 표시하기
+      $("input[name='paymethod']").on("click", function() {
+
+        let paymethod = $("input[name='paymethod']:checked").val();
+
+        if(paymethod == "nobank") {
+          $("#nobank_info").show();
+        } else if(paymethod == "kakaopay") {
+          $("#nobank_info").hide();
+        }
+      });
+
+      // 입금은행 선택시
+      $("#pay_nobank").on("change", function() {
+        $("#pay_bankaccount").val($(this).val());
+        
+      });
+
     });//
   </script>
   </body>

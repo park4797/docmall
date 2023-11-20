@@ -8,4 +8,5 @@ public interface AdMemberService {
 	
 	List<MemberVO> member_list();
 
+	void modify(MemberVO vo);
 }

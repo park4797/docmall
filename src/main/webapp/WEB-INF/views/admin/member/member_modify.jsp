@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-    
 <!DOCTYPE html>
-
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
 <html>
 <head>
   <meta charset="utf-8">
@@ -16,7 +16,26 @@
   <%@ include file="/WEB-INF/views/admin/include/plugin1.jsp" %>
   
 </head>
-
+<!--
+BODY TAG OPTIONS:
+=================
+Apply one or more of the following classes to get the
+desired effect
+|---------------------------------------------------------|
+| SKINS         | skin-blue                               |
+|               | skin-black                              |
+|               | skin-purple                             |
+|               | skin-yellow                             |
+|               | skin-red                                |
+|               | skin-green                              |
+|---------------------------------------------------------|
+|LAYOUT OPTIONS | fixed                                   |
+|               | layout-boxed                            |
+|               | layout-top-nav                          |
+|               | sidebar-collapse                        |
+|               | sidebar-mini                            |
+|---------------------------------------------------------|
+-->
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
@@ -29,49 +48,25 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1></h1>
+
+    </section>
 
     <!-- Main content -->
     <section class="content container-fluid">
-
-      <div class="row"> <!-- <tr>과 같은 느낌. row 안에는 <td>를 합이 12까지 사용 가능하다. -->
-        <div class="col-md-12"> <!-- <tr> 하나에 <td>를 하나만 쓰겠다는 의미 -->
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">회원목록</h3>
+      <form role="form">
+        <div>
+          <div class="form-group row">
+            <div class="col-2">
+              <label for="mbsp_id" class="col-2">이름</label>
             </div>
-
-            <div class="box-body">
-              <table class="table table-bordered">
-                <tbody>
-                  <tr>
-                    <th style="width : 20%">회원ID</th>
-                    <th style="width : 20%">회원이름</th>
-                    <th style="width : 20%">우편번호</th>
-                    <th style="width : 30%">이메일</th>
-                    <th style="width : 10%">비고</th>
-                  </tr>
-                  <!-- jstl 문법작업 -->
-                  <!-- forEach문 내부에서는 id를 사용할 수 없다. -->
-                  <c:forEach items="${member_list}" var="memberVO"> <!-- var = ProductVO class 성격이 된다. -->
-                    <tr>
-                      <td>${memberVO.mbsp_id}</td>
-                      <td>${memberVO.mbsp_name}</td>
-                      <td>${memberVO.mbsp_zipcode}</td>
-                      <td>${memberVO.mbsp_email}</td>
-                      <td>
-                        <input type="button" class="btn btn-danger" name="member_modify" id="member_modify" value="수정">
-                      </td>
-                    </tr>
-                  </c:forEach>
-                </tbody>
-              </table>
+            <div class="col-10">
+              <input type="text">
             </div>
           </div>
         </div>
-
-    </div>
-  </div>
-
+      </form>
     </section>
     <!-- /.content -->
   </div>
@@ -163,16 +158,5 @@
 
 <%@ include file="/WEB-INF/views/admin/include/plugin2.jsp" %>
 
-<script src="/bower_components/ckeditor/ckeditor.js"></script>
-<script>
-  // 동적코딩을 할 때 값을 변경하는 작업을 할때는 절차적으로 작업해야 한다.
-  $(document).ready(function() {
-
-    $("#member_modify").on("click", function() {
-		location.href="/admin/member/member_modify";
-    });
-  }); //
-
-</script>
 </body>
 </html>

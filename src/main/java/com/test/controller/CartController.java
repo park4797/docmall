@@ -63,7 +63,7 @@ public class CartController {
 		// 목록데이터를 모델로 추가
 		List<CartDTOList> cart_list = cartService.cart_list(mbsp_id);
 		
-		double cart_total_price = 0;
+		int cart_total_price = 0;
 		
 //		cart_list.forEach(vo -> {
 //			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
@@ -78,7 +78,8 @@ public class CartController {
 			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
 			
 //			vo.setPro_discount(vo.getPro_discount() * 1/100);
-			cart_total_price += ((double)vo.getPro_price() - (vo.getPro_price() * vo.getPro_discount() * 1/100)) * (double)vo.getCart_amount();
+//			cart_total_price += ((double)vo.getPro_price() - (vo.getPro_price() * vo.getPro_discount() * 1/100)) * (double)vo.getCart_amount(); // 할인율 적용
+			cart_total_price += (vo.getPro_price() * vo.getCart_amount());
 		}
 		
 		// 위에서 호출되어 다시 불러와서는 안된다.
@@ -99,7 +100,7 @@ public class CartController {
 	public ResponseEntity<String> cart_amount_change(Long cart_code, int cart_amount) throws Exception {
 		
 		ResponseEntity<String> entity = null;
-		
+			
 		cartService.cart_amount_change(cart_code, cart_amount);
 		
 		entity = new ResponseEntity<String>("success", HttpStatus.OK);
@@ -151,4 +152,5 @@ public class CartController {
 		
 		return entity;
 	}
+	
 }

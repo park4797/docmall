@@ -27,4 +27,10 @@ public class AdMemberController {
 		List<MemberVO> member_list = adMemberService.member_list();
 		model.addAttribute("member_list", member_list);
 	}
+	
+	@GetMapping("/member_modify")
+	public void member_modify() {
+		
+	}
+	
 }

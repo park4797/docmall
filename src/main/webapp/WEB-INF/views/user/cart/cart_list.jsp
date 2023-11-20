@@ -55,7 +55,6 @@
         <th scope="col">상품명</th>
         <th scope="col">판매가</th>
         <th scope="col">수량</th>
-        <th scope="col">할인</th>
         <th scope="col">합계</th>
         <th scope="col">비고</th>
       </tr>
@@ -65,18 +64,18 @@
     <c:forEach items="${cart_list}" var="cartDTO">
       <tr style="text-align: center;">
         <td>
-          <input type="checkbox" name="check" value="${cartDTO.cart_code}">
+          <input type="checkbox" name="cart_code" value="${cartDTO.cart_code}">
         </td>
-        <th scope="row">${cartDTO.cart_code}</th>
-        <td><img width="80" height="80" src="/user/cart/imageDisplay?dateFolderName=${cartDTO.pro_up_folder}&fileName=${cartDTO.pro_img}"></td>
+        <td>
+          <img width="80" height="80" src="/user/cart/imageDisplay?dateFolderName=${cartDTO.pro_up_folder}&fileName=${cartDTO.pro_img}">
+        </td>
         <td>${cartDTO.pro_name}</td>
         <td><span id="unitPrice">${cartDTO.pro_price}</span></td>
         <td>
           <input type="number" value="${cartDTO.cart_amount}" style="width: 35px;" name="cart_amount">
           <button type="button" class="btn btn-danger" name="btn_cart_amount_change">변경</button>
         </td>
-        <td><span id="unitDiscount">${cartDTO.pro_discount * 1/100}</span></td>
-        <td><span class="unitTotalPrice" id="unitTotalPrice">${(cartDTO.pro_price - (cartDTO.pro_price * (cartDTO.pro_discount * 1/100))) * cartDTO.cart_amount}</span></td>
+        <td><span class="unitTotalPrice" id="unitTotalPrice">${cartDTO.pro_price * cartDTO.cart_amount}</span></td>
         <td>
           <button type="button" class="btn btn-danger" name="btn_ajax_cart_del">삭제(ajax)</button>
           <button type="button" class="btn btn-danger" name="btn_non_ajax_cart_del">삭제(non_ajax)</button>
@@ -115,16 +114,6 @@
   <script src="/js/category_menu.js"></script>
 
   <script>
-    // 전체주문금액
-    function fn_cart_sum_price() {
-      let sumPrice = 0;
-
-      $(".unitTotalPrice").each(function() {
-        sumPrice += Number($(this).text());
-      });
-      $("#cart_total_price").text(sumPrice)
-    }
-
     // 동적코딩을 할 때 값을 변경하는 작업을 할때는 절차적으로 작업해야 한다.
     $(document).ready(function() {
       
@@ -168,7 +157,7 @@
         if(!confirm("상품을 삭제하시겠습니까?")) return;
 
         let cart_code = $(this).parent().parent().find("input[name='cart_code']").val() // 체크박스에 숨겨진 값
-        // console.log("카트코드", cart_code);
+        console.log("카트코드", cart_code);
 
         let cur_btn_delete = $(this);
 
@@ -213,17 +202,17 @@
       let idCheck = true;
       $("#checkAll").on("click", function() {
         // checkAll(제목행 체크박스)을 클릭시 name="check"인 input 태그는 체크된다.
-        $("input[name='check']").prop("checked", this.checked); // this 는 check
+        $("input[name='cart_code']").prop("checked", this.checked); // this 는 check
         idCheck = this.checked;
       });
 
       // 목록에서 데이터행 체크박스 선택
-      $("input[name='check']").on("click", function() {
+      $("input[name='cart_code']").on("click", function() {
         // 제목행 체크상태 변경
         $("#checkAll").prop("checked", this.checked);
         
         // 데이터행의 체크박스 상태변경
-        $("input[name='check']").each(function() {
+        $("input[name='cart_code']").each(function() {
           if(!$(this).is(":checked")) {
             $("#checkAll").prop("checked", false);
           }
@@ -234,14 +223,14 @@
       // 체크박스삭제
       $("#btn_check_del").on("click", function() {
         // 체크박스 유무확인
-        if($("input[name='check']:checked").length == 0) {
+        if($("input[name='cart_code']:checked").length == 0) {
           alert("삭제할 상품을 체크하세요");
           return;
         }
         // 배열문법
         let cart_code_arr = []; // 체크된 장바구니코드 배열
 
-        $("input[name='check']:checked").each(function() {
+        $("input[name='cart_code']:checked").each(function() {
           cart_code_arr.push($(this).val());
         });
 
@@ -268,6 +257,16 @@
           } 
         });
       });
+      
+      // 전체주문금액
+    function fn_cart_sum_price() {
+      let sumPrice = 0;
+
+      $(".unitTotalPrice").each(function() {
+        sumPrice += Number($(this).text());
+      });
+      $("#cart_total_price").text(sumPrice)
+    }
     });//
   </script>
   </body>

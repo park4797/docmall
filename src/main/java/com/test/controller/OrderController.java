@@ -2,31 +2,26 @@ package com.test.controller;
 
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.test.domain.MemberVO;
-import com.test.domain.OrderDetailVO;
 import com.test.domain.OrderVO;
 import com.test.domain.PaymentVO;
-import com.test.domain.ProductVO;
 import com.test.dto.CartDTOList;
 import com.test.kakaopay.ApproveResponse;
 import com.test.kakaopay.ReadyResponse;
 import com.test.service.CartService;
 import com.test.service.KakaoPayServiceImpl;
 import com.test.service.OrderService;
-import com.test.util.FileUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -53,7 +48,7 @@ public class OrderController {
 		// 목록데이터를 모델로 추가
 		List<CartDTOList> order_info = cartService.cart_list(mbsp_id);
 				
-		double order_total_price = 0;
+		int order_price = 0;
 				
 //		cart_list.forEach(vo -> {
 //			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
@@ -74,22 +69,22 @@ public class OrderController {
 			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
 					
 //					vo.setPro_discount(vo.getPro_discount() * 1/100);
-			order_total_price += ((double)vo.getPro_price() - (vo.getPro_price() * vo.getPro_discount() * 1/100)) * (double)vo.getCart_amount();
+			order_price += (vo.getPro_price() * vo.getCart_amount());
 		}
 				
 				// 위에서 호출되어 다시 불러와서는 안된다.
 //				model.addAttribute("cart_list", cartService.cart_list(mbsp_id));
 				
 		model.addAttribute("order_info", order_info);
-		model.addAttribute("order_price", order_total_price);
+		model.addAttribute("order_price", order_price);
 		model.addAttribute("proVO", itemName + " 외 " + String.valueOf(order_info.size() - 1) + "건");
 	}
 	
-	// 카카오페이 결제선택
+	// 결제선택 : 카카오페이
 	// 1) 결제준비요청
 	@GetMapping(value = "/orderPay", produces = "application/json")
 	public @ResponseBody ReadyResponse payReady(
-			String paymethod, OrderVO o_vo, /* OrderDetailVO od_vo, PaymentVO p_vo, */ int totalprice, HttpSession session
+			String paymethod, OrderVO o_vo, PaymentVO p_vo, int totalprice, HttpSession session
 			) throws Exception {
 		/*
 		1) 주문정보구성
@@ -109,11 +104,17 @@ public class OrderController {
 		Long ord_code = (long) orderService.getOrderSeq();
 		o_vo.setOrd_code(ord_code); // 주문번호 저장
 		
+		o_vo.setOrd_status("주문");
+		o_vo.setPayment_status("주문");
+		
+		p_vo.setOrd_code(ord_code);
+		p_vo.setMbsp_id(mbsp_id);
+		p_vo.setPay_method("카카오페이");
+		p_vo.setPay_tot_price(totalprice);
+		
 		log.info("결제 방법 : " + paymethod);
 		log.info("주문정보 : " + o_vo);
-		
-		o_vo.setOrd_status("");
-		o_vo.setPayment_status("");
+		log.info("결제 정보 : " + p_vo);
 		
 		// 1) 주문테이블 정보 저장.
 		// 2) 주문상세테이블 정보 저장
@@ -122,7 +123,7 @@ public class OrderController {
 		
 		String itemName = cart_list.get(0).getPro_name() + " 외 " + String.valueOf(cart_list.size() - 1) + "건";
 		
-		orderService.order_insert(o_vo);
+		orderService.order_insert(o_vo, p_vo);
 		
 		// Kakaopay 호출작업(결제준비요청)
 		ReadyResponse readyResponse =  kakaoPayServiceImpl.payReady(o_vo.getOrd_code(), itemName, cart_list.size(), mbsp_id, totalprice);
@@ -172,5 +173,38 @@ public class OrderController {
 	@GetMapping("/orderFail")
 	public void orderFail() {
 		
+	}
+	
+	// 결제선택 : 무통장입금
+	@GetMapping("/nobank")
+	public ResponseEntity<String> nobank(String paymethod, OrderVO o_vo, PaymentVO p_vo, int totalprice, HttpSession session) throws Exception {
+		
+		ResponseEntity<String> entity = null;
+		
+		String mbsp_id = ((MemberVO) session.getAttribute("loginStatus")).getMbsp_id();
+		o_vo.setMbsp_id(mbsp_id); // 아이디 저장
+		
+		// 시퀀스를 사용하여 주문테이블과 상세테이블의 주문번호를 동일한 주문번호값이 사용되게 처리
+		Long ord_code = (long) orderService.getOrderSeq();
+		o_vo.setOrd_code(ord_code); // 주문번호 저장
+		
+		o_vo.setOrd_status("주문완료");
+		o_vo.setPayment_status("주문");
+		
+		p_vo.setPay_method("무통장입금");
+		p_vo.setOrd_code(ord_code);
+		p_vo.setMbsp_id(mbsp_id);
+		p_vo.setPay_tot_price(totalprice);
+		p_vo.setPay_nobank_price(totalprice);
+		
+		log.info("결제방법 : " + paymethod);
+		log.info("주문정보 : " + o_vo);
+		log.info("결제정보 : " + p_vo);
+		
+		orderService.order_insert(o_vo, p_vo); // 주문, 주문상세 정보 저장, 장바구니 삭제, 결제정보 저장
+		
+		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		
+		return entity;
 	}
 }

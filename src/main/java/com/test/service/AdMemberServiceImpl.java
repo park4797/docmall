@@ -20,6 +20,11 @@ public class AdMemberServiceImpl implements AdMemberService {
 		return adMemberMapper.member_list();
 	}
 
+	@Override
+	public void modify(MemberVO vo) {
+		adMemberMapper.modify(vo);
+	}
+
 	
 
 }
