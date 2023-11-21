@@ -49,7 +49,7 @@ desired effect
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1></h1>
+      <h1>회원 수정</h1>
 
     </section>
 
