@@ -39,6 +39,8 @@ public class CartController {
 	@PostMapping("/cart_add")
 	public ResponseEntity<String> cart_add(CartVO vo, HttpSession session) throws Exception {
 		
+		log.info("장바구니: " + vo);
+		
 		ResponseEntity<String> entity = null;
 		
 		// 로그인 상태(MemberController - modify 부분 참고)

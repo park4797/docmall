@@ -22,6 +22,8 @@ import com.test.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
+// jsp상에서 console.log를 찍어보고, 전달작업 후 스프링까지 전송이 되는디 log.info로 확인 후 Mapper 작업 시작
+
 @Log4j
 @Controller
 @RequestMapping("/user/product/*")
@@ -72,5 +74,22 @@ public class UserProductController {
 	public ResponseEntity<byte[]> imageDisplay(String dateFolderName, String fileName) throws Exception {
 		
 		return FileUtils.getFile(uploadPath + dateFolderName, fileName);
+	}
+	
+	// 상품상세. 하단에 상품후기 포함
+	@GetMapping("/pro_detail")
+	public void pro_detail(Criteria cri, Integer cg_code, @ModelAttribute("cg_name") String cg_name, Integer pro_num, Model model) throws Exception {
+		
+		log.info("페이징 정보 : " + cri);
+		log.info("상품코드 : " + pro_num);
+		
+		ProductVO productVO = userProductService.pro_detail(pro_num);
+		
+		// 클라이언트에서 이미지 출력작업. \ 역슬래시가 서버로 보낼때 문제가 되어 / 슬래시로 변경
+		productVO.setPro_up_folder(productVO.getPro_up_folder().replace("\\", "/"));
+		
+		model.addAttribute("productVO", productVO);
+		
+		// DB연동작업
 	}
 }

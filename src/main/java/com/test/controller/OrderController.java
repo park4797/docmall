@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.test.domain.CartVO;
 import com.test.domain.MemberVO;
 import com.test.domain.OrderVO;
 import com.test.domain.PaymentVO;
@@ -78,6 +79,20 @@ public class OrderController {
 		model.addAttribute("order_info", order_info);
 		model.addAttribute("order_price", order_price);
 		model.addAttribute("proVO", itemName + " 외 " + String.valueOf(order_info.size() - 1) + "건");
+	}
+	
+	// 상품상세에서 주문하기(CartController의 cart_add 작업과 유사)
+	@GetMapping("/order_ready")
+	public String order_ready(CartVO vo, HttpSession session) throws Exception {
+		
+		log.info("상세주문하기 : " + vo);
+		
+		String mbsp_id = ((MemberVO) session.getAttribute("loginStatus")).getMbsp_id();
+		vo.setMbsp_id(mbsp_id);
+		
+		cartService.cart_add(vo);
+		
+		return "redirect:/user/order/order_info"; // 주문정보 페이지
 	}
 	
 	// 결제선택 : 카카오페이

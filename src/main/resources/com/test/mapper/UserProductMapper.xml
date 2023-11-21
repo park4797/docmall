@@ -35,4 +35,13 @@
  		WHERE
  			CG_CODE = #{cg_code}
  	</select>
+ 	
+ 	<select id="pro_detail" resultType="com.test.domain.ProductVO" parameterType="Integer">
+ 		select
+			PRO_NUM, CG_CODE, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY, PRO_DATE, PRO_UPDATEDATE
+		from
+			PRODUCT_TBL
+		where
+			PRO_NUM = #{pro_num}
+ 	</select>
 </mapper>
