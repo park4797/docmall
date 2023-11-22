@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.test.mapper.ReviewMapper">
+	<insert id="review_insert" parameterType="com.test.domain.ReviewVO">
+		INSERT INTO
+			REVIEW_TBL(REW_NUM, MBSP_ID, PRO_NUM, REW_CONTENT, REW_SCORE)
+		VALUES
+			(seq_review_tbl.nextval, #{mbsp_id}, #{pro_num}, #{rew_content}, #{rew_score})
+	</insert>
+</mapper>
