@@ -4,10 +4,41 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.test.mapper.ReviewMapper">
+
 	<insert id="review_insert" parameterType="com.test.domain.ReviewVO">
 		INSERT INTO
 			REVIEW_TBL(REW_NUM, MBSP_ID, PRO_NUM, REW_CONTENT, REW_SCORE)
 		VALUES
 			(seq_review_tbl.nextval, #{mbsp_id}, #{pro_num}, #{rew_content}, #{rew_score})
 	</insert>
+	
+	<!-- CDATA section은 xml 명렁어로 쿼리 내용중 특수문자 사용을 허용(데이터 유효성 검사를 하지 않겠다) -->
+	<select id="list" resultType="com.test.domain.ReviewVO" parameterType="map">
+		<![CDATA[
+		select
+			REW_NUM, MBSP_ID, PRO_NUM, REW_CONTENT, REW_SCORE, REW_REGDATE
+		from (
+		      select /*+INDEX_DESC(REVIEW_TBL PK_REVIEW_TBL) */
+		      	rownum rn, REW_NUM, MBSP_ID, PRO_NUM, REW_CONTENT, REW_SCORE, REW_REGDATE
+		      from 
+		      	REVIEW_TBL
+		      where
+		      	PRO_NUM = #{pro_num}
+		      	and
+		      	rownum <= #{cri.pageNum} * #{cri.amount}
+			 )
+		where
+			rn > (#{cri.pageNum} -1) * #{cri.amount}
+		]]>
+	</select>
+	
+	<select id="listCount" resultType="int" parameterType="Integer">
+ 		SELECT
+ 			COUNT(*)
+ 		FROM
+ 			REVIEW_TBL
+ 		WHERE
+ 			PRO_NUM = #{pro_num}
+	</select>
+ 	
 </mapper>

@@ -534,6 +534,25 @@ CREATE TABLE ORDER_TBL(
         FOREIGN KEY(MBSP_ID) REFERENCES MBSP_TBL(MBSP_ID)
 );
 
+-- 주문번호로 사용할 시퀀스 생성
+CREATE SEQUENCE SEQ_ORD_CODE;
+
+-- 주문테이블
+-- mbsp_id, ord_name, ord_zipcode, ord_addr_basic, ord_addr_detail, ord_tel, ord_price, ord_regdate, ord_status, paryment_status, ord_code
+
+-- 주문상세테이블 참조(장바구니 테이블 참조)
+INSERT ~ SELECT 문
+
+INSERT INTO ORDETAIL_TBL(ORD_CODE, PRO_NUM, DT_AMOUNT, DT_PRICE)
+SELECT ORD_CODE, c.CART_AMOUNT, c.PRO_NUM, p.PRO_PRICE
+FROM CART_TBL c inner join PRODUCT_TBL p ON c.pro_num = p.pro_num
+WHERE MBSP_ID = 'user01';
+
+
+INSERT INTO ORDETAIL_TBL(ORD_CODE, PRO_NUM, DT_AMOUNT, DT_PRICE)
+SELECT #{ord_code}, c.PRO_NUM, c.CART_AMOUNT, p.PRO_PRICE
+FROM CART_TBL c inner join PRODUCT_TBL p ON c.pro_num = p.pro_num
+WHERE MBSP_ID = #{mbsp_id}
 
 insert into ORDER_TBL(ord_code, mbsp_id, ord_name, ord_addr_post, ord_addr_basic, ord_addr_detail, ord_tel, ord_price)
 values
@@ -694,8 +713,32 @@ CREATE TABLE REVIEW_TBL(
         FOREIGN KEY(PRO_NUM) REFERENCES PRODUCT_TBL(PRO_NUM)
 );
 
+-- 사용자 상품리스트 페이징목록쿼리 -> 상품후기 페이징목록쿼리 변경 Integer pro_num  Criteria cri
+<select id="list" resultType="com.test.domain.ReviewVO" parameterMap="map">
+		<![CDATA[
+		select
+			REW_NUM, MBSP_ID, PRO_NUM, REW_CONTENT, REW_SCORE, REW_REGDATE
+		from (
+		      select /*+INDEX_DESC(REVIEW_TBL PK_REVIEW_TBL) */
+		      	rownum rn, REW_NUM, MBSP_ID, PRO_NUM, REW_CONTENT, REW_SCORE, REW_REGDATE
+		      from 
+		      	REVIEW_TBL
+		      where
+		      	pro_num = #{pro_num}
+		      	and
+		      	rownum <= #{cri.pageNum} * #{cri.amount}
+			 )
+		where
+			rn > (#{cri.pageNum} -1) * #{cri.amount}
+		]]>
+	</select> 	
+
 ALTER TABLE REVIEW_TBL
 ADD CONSTRAINT PK_REVIEW_TBL PRIMARY KEY(REW_NUM);
+-- primary key 생성시 index는 자동 생성된다.
+
+INSERT INTO REVIEW_TBL(rew_num, mbsp_id, pro_num, rew_content, rew_score, rew_regdate)
+VALUES(seq_review_tbl.nextval, #{},)
 
 
 
@@ -863,3 +906,74 @@ where pro_num = ?;
 
 SELECT PRO_NUM, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY, PRO_DATE
 FROM PRODUCT_TBL
+
+-- 장바구니 선택삭제
+
+/* 
+delete from
+    장바구니
+where
+    장바구니 코드 IN (10, 20, 30)
+*/
+<delete id="cart_sel_delete">
+<!--  파라미터로 List컬렉션이 사용될 경우에는 mybatis 구문에서는 collection="list" 사용해야 함. -->
+  DELETE FROM 
+     CART_TBL
+  WHERE
+     CART_CODE IN
+     <foreach collection="list" item="cart_code" open="(" close=")" separator=",">
+        #{cart_code}
+     </foreach>
+</delete>
+
+SELECT
+    MBSP_EMAIL, MBSP_ID, MBSP_NAME, MBSP_ZIPCODE
+FROM
+    MBSP_TBL
+    
+    <select id="member_list" resultType="com.test.domain.MamberVO">
+  		SELECT
+    		MBSP_EMAIL, MBSP_ID, MBSP_NAME, MBSP_ZIPCODE
+		FROM
+    		MBSP_TBL
+  	</select>
+    
+-- 결제테이블
+CREATE TABLE PAYMENT (
+    PAY_CODE            NUMBER          PRIMARY KEY, -- 일련번호
+    ORD_CODE            NUMBER          NOT NULL,    -- 주문번호
+    MBSP_ID             VARCHAR2(50)    NOT NULL,    -- 회원ID
+    PAY_METHOD          VARCHAR2(50)    NOT NULL,    -- 결제방식
+    PAY_DATE            DATE            NULL,        -- 결제일
+    PAY_TOT_PRICE       NUMBER          NOT NULL,    -- 결제금액
+    PAY_NOBANK_PRICE    NUMBER          NULL,        -- 무통장입금금액
+    PAY_NOBANK_USER     VARCHAR2(50)    NULL,        -- 무통장 입금자명
+    PAY_NOBANK          VARCHAR2(50)    NULL,        -- 입금은행
+    PAY_BANKACCOUNT
+    PAY_MEMO            VARCHAR2(100)   NULL         -- 메모
+);
+
+--    PAY_REST_PRICE      NUMBER          NULL,        -- 미지급금 제외
+-- pay_bankaccount 추가
+-- pay_code, odr_code, mbsp_id, pay_method, pay_date, pay_tot_price, pay_nobank_price, pay_rest_price, pay_nobank_user, pay_nobank, pay_memo
+CREATE SEQUENCE SEQ_PAYMENT_CODE;
+
+INSERT INTO PAYMENT(PAY_CODE, ODR_CODE, MBSP_ID, PAY_METHOD, PAY_DATE, PAY_TOT_PRICE, PAY_NOBANK_PRICE, PAY_NOBANK_USER, PAY_NOBANK, PAY_MEMO)
+VALUES(SEQ_PAYMENT_CODE.NEXTVAL, odr_code, mbsp_id, pay_method, pay_date, pay_tot_price, pay_nobank_price, pay_rest_price, pay_nobank_user, pay_nobank, pay_memo);
+
+/* 
+delete from
+    장바구니
+where
+    장바구니 코드 IN (10, 20, 30)
+*/
+<delete id="cart_sel_delete">
+<!--  파라미터로 List컬렉션이 사용될 경우에는 mybatis 구문에서는 collection="list" 사용해야 함. -->
+  DELETE FROM 
+     CART_TBL
+  WHERE
+     CART_CODE IN
+     <foreach collection="list" item="cart_code" open="(" close=")" separator=",">
+        #{cart_code}
+     </foreach>
+</delete>

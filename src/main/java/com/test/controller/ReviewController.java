@@ -1,5 +1,7 @@
 package com.test.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.test.domain.MemberVO;
 import com.test.domain.ReviewVO;
+import com.test.dto.Criteria;
+import com.test.dto.PageDTO;
 import com.test.service.ReviewService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,7 +44,14 @@ public class ReviewController {
 	// 반대의미는 @ResponseBody
 	@PostMapping(value = "/new", consumes = "application/json", produces = {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity<String> review_insert(@RequestBody ReviewVO vo, HttpSession session) throws Exception {
-		
+		// ResponseEntity<String>는 대부분 insert update delete 에 사용, 'seccess'를 보내주기 위함
+		/*
+		 ResponseEntity 사용 이유
+		  - ajax 호출 목적
+		  - 서버에서 실행된 값을 클라이언트에 보낼때 header 작업(데이터의 부연설명)을보내기 위해
+		  - HttpStatus를 보내주기 위해
+		 
+		 */
 		log.info("리뷰 : " + vo);
 		
 		// MemberController 에서 ID를 가져온 방식과 동일
@@ -61,8 +72,35 @@ public class ReviewController {
 	// 쿼리스트링 : list?pro_num=10&page=1 -> // Rest API 주소 : list/10/1
 	@GetMapping("/list/{pro_num}/{page}")
 	public ResponseEntity<Map<String, Object>> list(@PathVariable("pro_num") Integer pro_num, @PathVariable("page") Integer page) throws Exception {
+		// ResponseEntity<Map<String, Object>> 는 대게 select 에 사용
+		/*
+		  리턴타입에 따른 구문
+			ResponseEntity<Map<String, Object>> : 1)상품후기 목록 데이터 List<ReviewVO>, 2)페이징 데이터 PageDTO
+			상품후기 목록 데이터 - List<ReviewVO> 만 보내주고 싶다면 ResponseEntity<ReviewVO>
+			페이징 데이터 - PageDTO ResponseEntity<PageDTO>
+			서로 다른 Datatype을 받기위해 Object를 사용했다.
+		 */
+		// 각 구문에 return은 하나만 할 수 있기 때문에 map으로 묶어 한 번에 리턴. 또한 map에는 제네릭 문법도 사용 가능하기 때문
 		
 		ResponseEntity<Map<String, Object>> entity = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		// 1)상품후기 목록 데이터
+		Criteria cri = new Criteria();
+		cri.setAmount(20);
+		cri.setPageNum(page);
+		
+		List<ReviewVO> list = reviewService.list(pro_num, cri);
+		
+		// 2)페이징 데이터
+		int listCount = reviewService.listCount(pro_num);
+		PageDTO pageMaker = new PageDTO(cri, listCount);
+
+		map.put("list", list); // 상품후기 목록 데이터 List<ReviewVO>
+		map.put("pageMaker", pageMaker); // 페이징데이터 PageDTO
+		
+		// jackson-databind 라이브러리에 의하여 map -> json으로 변환되어 ajax 호출한 쪽으로 return값이 전송된다.
+		entity = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 		
 		return entity;
 	}
