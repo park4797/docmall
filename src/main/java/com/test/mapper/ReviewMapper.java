@@ -14,4 +14,7 @@ public interface ReviewMapper {
 	List<ReviewVO> list(@Param("pro_num") Integer pro_num, @Param("cri") Criteria cri); // 검색필드는 사용하지 않는다
 	
 	int listCount(Integer pro_num);
+	
+	// 리뷰 삭제
+	void delete(Long rew_num);
 }

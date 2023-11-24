@@ -119,6 +119,7 @@ public class MemberController {
 			if(passwordEncoder.matches(dto.getMbsp_password(), db_vo.getMbsp_password())) {
 				
 				// 로그인 성공결과로 서버측의 메모리를 사용하는 세션형태 작업
+				db_vo.setMbsp_password(null); // 보안상 비밀번호를 null 처리 할 수도 있다.
 				session.setAttribute("loginStatus", db_vo);
 
 				log.info("로그인 시간 : " + db_vo);

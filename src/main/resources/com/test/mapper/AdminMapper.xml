@@ -13,6 +13,7 @@
 	    WHERE
 	        ADMIN_ID= #{admin_id}
 	</select>
+	
 	<update id="loginTime" parameterType="String">
 		UPDATE
 			ADMIN_TBL
