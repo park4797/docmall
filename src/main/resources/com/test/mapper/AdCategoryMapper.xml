@@ -22,6 +22,7 @@
 			CG_PARENT_CODE = #{cg_parent_code}
 	</select>
 
+
 	<!-- 상품테이블의 2차카테고리 코드의 1차카테고리 정보 -->
  	<select id="get" resultType="com.test.domain.CategoryVO" parameterType="Integer">
  		SELECT
@@ -31,5 +32,6 @@
 		WHERE
 			CG_CODE = #{cg_code}
  	</select>
+ 	
 
 </mapper>

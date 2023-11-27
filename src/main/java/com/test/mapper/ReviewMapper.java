@@ -17,4 +17,7 @@ public interface ReviewMapper {
 	
 	// 리뷰 삭제
 	void delete(Long rew_num);
+	
+	// 리뷰 수정
+	void modify(ReviewVO vo);
 }

@@ -35,4 +35,9 @@ public class ReviewServiceImpl implements ReviewService {
 	public void delete(Long rew_num) {
 		reviewMapper.delete(rew_num);
 	}
+
+	@Override
+	public void modify(ReviewVO vo) {
+		reviewMapper.modify(vo);
+	}
 }
