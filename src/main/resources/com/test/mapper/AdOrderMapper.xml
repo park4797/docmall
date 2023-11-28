@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.test.mapper.AdOrderMapper">
+  
+ 	<!-- 공통된 sql 구문작업시 사용 : 검색조건 작업 -->
+ 	<sql id="criteria">
+ 	<!-- prefixOverrides : 실행될 쿼리의 <trim> 문 안에 쿼리 가장 앞에 해당하는 문자들이 있으면 자동으로 지워준다 -->
+ 		<trim prefix="(" suffix=") AND" prefixOverrides="OR">
+ 			<foreach collection="typeArr" item="type"><!-- getType() 동작 -->
+ 				<trim prefix="OR">
+ 					<choose>
+		 				<when test="type == 'N'.toString()">
+		 					ORD_CODE like '%' || #{keyword} || '%'
+		 				</when>
+		 				<when test="type == 'C'.toString()">
+		 					ORD_NAME like '%' || #{keyword} || '%'
+		 				</when>
+ 					</choose>
+ 				</trim>
+ 			</foreach>
+ 		</trim>
+ 	</sql>
+ 	
+ 	<!-- CDATA section -->
+ 	<select id="order_list" resultType="com.test.domain.OrderVO" parameterType="com.test.dto.Criteria">
+		<![CDATA[
+		SELECT
+			ORD_CODE, MBSP_ID, ORD_NAME, ORD_ZIPCODE, ORD_ADDR_BASIC, ORD_ADDR_DETAIL, ORD_TEL, ORD_PRICE, ORD_REGDATE, ORD_STATUS, PAYMENT_STATUS
+		FROM (
+		      SELECT /*+INDEX_DESC(ORDER_TBL PK_ORDER_TBL) */
+		      	rownum rn, ORD_CODE, MBSP_ID, ORD_NAME, ORD_ZIPCODE, ORD_ADDR_BASIC, ORD_ADDR_DETAIL, ORD_TEL, ORD_PRICE, ORD_REGDATE, ORD_STATUS, PAYMENT_STATUS
+		      FROM 
+		      	ORDER_TBL
+		      WHERE
+		      ]]>
+		      <!-- refid : reference id -->
+		      <include refid="criteria"></include>
+		      
+		      <![CDATA[
+		      rownum <= #{pageNum} * #{amount}
+			 )
+		WHERE rn > (#{pageNum} -1) * #{amount}
+		]]>
+ 	</select>
+    
+ 	<select id="getTotalCount" resultType="int">
+ 		select count(*) from ORDER_TBL where
+ 		
+ 		<!-- 검색에 대한 정보가 들어온다 -->
+ 		<include refid="criteria"></include>
+ 		
+ 		<!-- 검색을 사용하지 않으면  -->
+ 		ORD_CODE > 0
+ 	</select>
+ 	
+  </mapper>

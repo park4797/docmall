@@ -84,22 +84,22 @@ desired effect
             </div>
 
             <div class="form-group row">
-              <label for="title" class="col-sm-2">상품명</label>
+              <label for="pro_name" class="col-sm-2">상품명</label>
               <div class="col-sm-4">
                 <input type="text" class="form-control" name="pro_name" id="pro_name" placeholder="상품명 입력">
               </div>
-              <label for="title" class="col-sm-2">상품가격</label>
+              <label for="pro_price" class="col-sm-2">상품가격</label>
               <div class="col-sm-4">
                 <input type="text" class="form-control" name="pro_price" id="pro_price" placeholder="상품가격 입력">
               </div>
             </div>
 
             <div class="form-group row">
-              <label for="title" class="col-sm-2">할인율</label>
+              <label for="pro_discount" class="col-sm-2">할인율</label>
               <div class="col-sm-4">
                 <input type="text" class="form-control" name="pro_discount" id="pro_discount" placeholder="할인율 입력">
               </div>
-              <label for="title" class="col-sm-2">제조사</label>
+              <label for="pro_publisher" class="col-sm-2">제조사</label>
               <div class="col-sm-4">
                 <input type="text" class="form-control" name="pro_publisher" id="pro_publisher" placeholder="제조사 입력">
               </div>
