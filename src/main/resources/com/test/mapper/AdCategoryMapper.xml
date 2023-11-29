@@ -33,5 +33,34 @@
 			CG_CODE = #{cg_code}
  	</select>
  	
+ 	<!-- 별칭을 주어 컬럼명과 필드명을 일치시켜서 받아냈다. 
+ 	<select id="getCateInfo1" resultType="com.test.domain.CateVO">
+ 		SELECT
+ 			cg_code AS cate_code,
+ 			cg_parent_code AS cate_parent_code,
+ 			cg_name AS cate_name
+ 		FROM
+ 			category_tbl
+ 	</select>
+ 	-->
+ 	
+ 	<!-- resultMap 을 사용하여 일치시켰다.  
+ 	<select id="getCateInfo2" resultMap="categoryMap">
+ 		SELECT
+ 			cg_code,
+ 			cg_parent_code,
+ 			cg_name
+ 		FROM
+ 			category_tbl
+ 	</select>
+ 	
+ 	<resultMap type="com.test.domain.CateVO" id="categoryMap">
+ 		<id property="cate_code" column="cg_code"/>
+ 		<result property="cate_parent_code" column="cg_parent_code"/>
+ 		<result property="cate_name" column="cg_name"/>
+ 	</resultMap>
+ 	-->
+ 	
+ 	
 
 </mapper>

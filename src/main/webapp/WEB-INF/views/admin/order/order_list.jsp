@@ -17,28 +17,39 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
   
   <script id="orderDetailTemplate" type="text/x-handlebars-template">
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <th scope="col">번호</th>
-          <th scope="col">리뷰내용</th>
-          <th scope="col">별평점</th>
-          <th scope="col">날짜</th>
-          <th scope="col">비고</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each .}}
-        <tr>
-          <th scope="row" class="rew_num">{{rew_num}}</th>
-          <td class="rew_content">{{rew_content}}</td>
-          <td class="rew_score" style="color: royalblue;">{{starRating rew_score}}</td>
-          <td class="rew_regdate">{{convertDate rew_regdate}}</td> <!-- Handlebars 함수가 들어가게 되고 뒤의 rew_regdate가 파라미터가 된다. -->
-          <td>{{authControlView mbsp_id rew_num rew_score}}</td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
+    <tr class="tr_detail_info">
+      <td colspan="9" style="text-align: center;"> <!-- 주문리스트쪽 td가 9개이기 때문 -->
+        <table class="table table-sm">
+          <caption style="display: table-caption; text-align: center; color: red; font-weight: bold;">[주문상세정보]</caption>
+          <thead>
+            <tr>
+              <th scope="col">주문번호</th>
+              <th scope="col">상품코드</th>
+              <th scope="col">상품이미지</th>
+              <th scope="col">상품명</th>
+              <th scope="col">주문수량</th>
+              <th scope="col">주문금액</th>
+              <th scope="col">비고</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each .}}
+            <tr>
+              <th scope="row">{{ord_code}}</th>
+              <td>{{pro_num}}</td>
+              <td><img src='/admin/order/imageDisplay?dateFolderName={{pro_up_folder}}&fileName={{pro_img}}'></td>
+              <td>{{pro_name}}</td>
+              <td>{{dt_amount}}</td>
+              <td>{{ord_price}}</td>
+              <td><button type="button" name="btn_order_delete" class="btn btn-danger" data-ord_code="{{ord_code}}" data-pro_num="{{pro_num}}">delete</button></td>
+              <!-- 테이블상 복합키로 설정하여 개별삭제가 가능하게 했다. -->
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    
   </script>
 
 </head>
@@ -82,11 +93,10 @@
                   <button type="submit" class="btn btn-primary">검색</button>
                 </form>
               </div>
-              <table class="table table-bordered">
+              <table class="table table-bordered" id="order_info_tbl">
                 <tbody>
                   <tr>
-                    <th style="width : 2%"><input type="checkbox" id="checkAll"></th>
-                    <th style="width : 8%">번호</th>
+                    <th style="width : 10%">번호</th>
                     <th style="width : 10%">주문일시</th>
                     <th style="width : 10%">주문번호</th>
                     <th style="width : 15%">배송비</th>
@@ -103,32 +113,43 @@
                   <!-- forEach문 내부에서는 id를 사용할 수 없다. -->
                   <c:forEach items="${order_list}" var="orderVO"> <!-- var = ProductVO class 성격이 된다. -->
                     <tr>
-                      <td><input type="checkbox" name="check" value="${orderVO.ord_code}"></td>
-                      <td>${orderVO.ord_code}</td>
+                      <td>상품번호</td>
+
                       <td>
                         <fmt:formatDate value="${orderVO.ord_regdate}" pattern="yyyy-MM-dd hh:mm:ss" />
                       </td>
+
                       <td>
                         <span class="btn_order_detail">${orderVO.ord_code}</span>
                       </td>
+
                       <td>
                         배송비0
                       </td>
+
                       <td>
                         주문상태
                       </td>
+
                       <td>
                         ${orderVO.ord_name}
                       </td>
+
                       <td>
                         ${orderVO.ord_price}
                       </td>
+
                       <td>
                         ${orderVO.payment_status}
                       </td>
+
                       <td>
-                        <button type="button" class="btn btn-info btn_order_detail" data-ord_code="${orderVO.ord_code}">주문상세</button>
+                        <button type="button" class="btn btn-info btn_order_detail1" data-ord_code="${orderVO.ord_code}">주문상세1</button>
                       </td>
+                      <td>
+                        <button type="button" class="btn btn-info btn_order_detail2" data-ord_code="${orderVO.ord_code}">주문상세2</button>
+                      </td>
+
                     </tr>
                   </c:forEach>
                 </tbody>
@@ -136,9 +157,7 @@
             </div>
             <div class="box-footer clearfix">
               <div class="row">
-                <div class="col-md-2">
-                  <button class="btn btn-primary" id="btn_check_modify1" role="button">체크상품수정1</button>
-                  <button class="btn btn-primary" id="btn_check_modify2" role="button">체크상품수정2</button>
+                <div class="col-md-4">
                   <!-- 1) 페이지번호 클릭시 사용 [이전] 1 2 3 4 5 [다음], action="/admin/order/list"-->
                   <!-- 2) 목록에서 제목 클릭시 사용, actionForm.setAttribute("action", "/admin/order/get");-->
                   <form id="actionForm" action="" method="get">
@@ -176,13 +195,10 @@
                     </ul>
                   </nav>
                 </div>
-                <div class="col-md-2 text-right">
-                  <button class="btn btn-primary" id="btn_product_insert" role="button">상품등록</button>
-                </div>
                   
-                </div>
-                
               </div>
+                
+            </div>
               
 
             </div>
@@ -292,192 +308,111 @@
     $(".movepage").on("click", function(event) {
       event.preventDefault(); // a태그의 href속성에 페이지번호를 숨겨두었다.
 
-      actionForm.attr("action", "/admin/product/pro_list");
+      actionForm.attr("action", "/admin/order/order_list");
 
       // actionForm 태그를 가지고 있는 하위요소중 input 태그의 name 이 pageNum인 것을 찾는 작업
       actionForm.find("input[name='pageNum']").val($(this).attr("href"));
 
       actionForm.submit();
     });
-
-    // 목록에서 제목행 체크박스 선택
-    let icCheck = true;
-    $("#checkAll").on("click", function() {
-      // checkAll(제목행 체크박스)을 클릭시 name="check"인 input 태그는 체크된다.
-      $("input[name='check']").prop("checked", this.checked); // this 는 check
-      icCheck = this.checked;
-    });
-
-    // 목록에서 데이터행 체크박스 선택
-    $("input[name='check']").on("click", function() {
-      // 제목행 체크상태 변경
-      $("#checkAll").prop("checked", this.checked);
-      
-      // 데이터행의 체크박스 상태변경
-      $("input[name='check']").each(function() {
-        if(!$(this).is(":checked")) {
-          $("#checkAll").prop("checked", false);
-        }
-      });
-    });
-
-    // 체크박스수정1 버튼 클릭
-    $("#btn_check_modify1").on("click", function() {
-      // 체크박스 유무확인
-      if($("input[name='check']:checked").length == 0) {
-        alert("수정할 상품을 체크하세요");
-        return;
-      }
-      // 배열문법
-      let pro_num_arr = []; // 체크된 상품코드 배열
-      let pro_price_arr = []; // 체크된 상품가격 배열
-      let pro_buy_arr = []; // 체크된 상품진열 배열
-
-      $("input[name='check']:checked").each(function() {
-        pro_num_arr.push($(this).val());
-        pro_price_arr.push($(this).parent().parent().find("input[name='pro_price']").val()); // 첫번째 parent는 td, 두번째 parent는 tr이 된다.
-        pro_buy_arr.push($(this).parent().parent().find("select[name='pro_buy']").val());
-      });
-
-      console.log("상품코드", pro_num_arr);
-      console.log("상품가격", pro_price_arr);
-      console.log("상품유무", pro_buy_arr);
-
-      $.ajax({
-      url:'/admin/product/pro_checked_modify1', // 체크상품수정 스프링 매핑주소
-      type:'post',
-      data:{pro_num_arr : pro_num_arr, pro_price_arr : pro_price_arr, pro_buy_arr : pro_buy_arr}, // {파라미터명1 : 값1, 파라미터명2 : 값2 ...},
-      dataType:'text', // json, text, xml, html 등
-      success: function(result){
-        if(result == "success"){
-          alert("체크상품이 수정되었습니다.")
-
-          // DB에서 다시 불러오는 작업
-          // 1) location.href="/admin/product/pro_list";
-          /* 2) 현재 리스트 상태로 불러오는 의미
-          actionForm.attr("method", get);
-          actionForm.attr("action", "/admin/product/pro_list");
-          actionForm.submit();
-          */
-        }
-      } 
-      });
-    });
-
-    // 체크박스수정2 버튼 클릭
-    $("#btn_check_modify2").on("click", function() {
-      // 체크박스 유무확인
-      if($("input[name='check']:checked").length == 0) {
-        alert("수정할 상품을 체크하세요");
-        return;
-      }
-      // 배열문법
-      let pro_num_arr = []; // 체크된 상품코드 배열
-      let pro_price_arr = []; // 체크된 상품가격 배열
-      let pro_buy_arr = []; // 체크된 상품진열 배열
-
-      $("input[name='check']:checked").each(function() {
-        pro_num_arr.push($(this).val());
-        pro_price_arr.push($(this).parent().parent().find("input[name='pro_price']").val()); // 첫번째 parent는 td, 두번째 parent는 tr이 된다.
-        pro_buy_arr.push($(this).parent().parent().find("select[name='pro_buy']").val());
-      });
-
-      console.log("상품코드", pro_num_arr);
-      console.log("상품가격", pro_price_arr);
-      console.log("상품유무", pro_buy_arr);
-
-      $.ajax({
-      url:'/admin/product/pro_checked_modify2', // 체크상품수정 스프링 매핑주소
-      type:'post',
-      data:{pro_num_arr : pro_num_arr, pro_price_arr : pro_price_arr, pro_buy_arr : pro_buy_arr}, // {파라미터명1 : 값1, 파라미터명2 : 값2 ...},
-      dataType:'text', // json, text, xml, html 등
-      success: function(result){
-        if(result == "success"){
-          alert("체크상품이 수정되었습니다.")
-
-          // DB에서 다시 불러오는 작업
-          // 1) location.href="/admin/product/pro_list";
-          /* 2) 현재 리스트 상태로 불러오는 의미
-          actionForm.attr("method", get);
-          actionForm.attr("action", "/admin/product/pro_list");
-          actionForm.submit();
-          */
-        }
-      } 
-      });
-    });
   
-    // 목록페이지에서 상품등록 버튼
-    $("#btn_product_insert").on("click", function() {
-      location.href="/admin/product/pro_insert";
-    });
-
-    // 상품수정
-    $("button[name='btn_pro_edit']").on("click", function() {
-
-      // 수정 상품코드
-      let pro_num = $(this).parent().parent().find("input[name='check']").val();
-      
-      // console.log("상품코드", pro_num);
-
-      // 뒤로가기 클릭후 다시 수정버튼 클릭시 코드 중복되는 부분이 있어 삭제작업, 기존 bno를 삭제했던것과 동일
-      actionForm.find("input[name='pro_num']").remove();
-
-      // <input type="hidden" name="pro_num" id="pro_num" />
-      actionForm.append('<input type="hidden" name="pro_num" id="pro_num" value="' + pro_num + '" />');
-
-      actionForm.attr("method", "get");
-      actionForm.attr("action", "/admin/product/pro_edit");
-      actionForm.submit();
-    })
-
-    // 상품 삭제 화살표함수 사용시 상품코드값을 읽을 수 없다.
-    $(".btn_pro_del").on("click", function() {
-
-      // text() : 입력양식태그가 아닌 일반태그의 값을 변경하거나 읽을 때 사용
-      let pro_name =$(this).parent().parent().find(".pro_name").text();
-      if(!confirm(pro_name + " 을(를) 삭제하시겠습니까?")) return;
-      
-      // val() method : input, select, textarea 등 태그의 값을 변경하거나 읽을 때 사용
-      let pro_num = $(this).parent().parent().find("input[name='check']").val();
-
-      // console.log("상품코드", pro_num);
-
-      // 뒤로가기 클릭후 다시 수정버튼 클릭시 코드 중복되는 부분이 있어 삭제작업, 기존 bno를 삭제했던것과 동일
-      actionForm.find("input[name='pro_num']").remove();
-
-      // <input type="hidden" name="pro_num" id="pro_num" />
-      actionForm.append('<input type="hidden" name="pro_num" id="pro_num" value="' + pro_num + '" />');
-
-      actionForm.attr("method", "post");
-      actionForm.attr("action", "/admin/product/pro_delete");
-      actionForm.submit();
-    });
-    
-    // 주문상세 클릭 이벤트
-    $(".btn_order_detail").on("click", function() {
+    // 주문상세 클릭 1 이벤트
+    $(".btn_order_detail1").on("click", function() {
 
       let cur_tr = $(this).parent().parent();
       let ord_code = $(this).data("ord_code");
 
       console.log("주문코드", ord_code);
 
-      let url ="/admin/order/order_detail_info/" + ord_code;
+      let url ="/admin/order/order_detail_info1/" + ord_code; // 주소를 갖고
 
-      getorDetailInfo(url);
+      getOrderDetailInfo(url, cur_tr); // 함수를 호출
     });
 
-    function getorDetailInfo(url) {
+    function getOrderDetailInfo(url, cur_tr) {
       $.getJSON(url, function(data){
-        // data = 주문상세정보
+        // data : 주문상세정보
+
+        console.log("상세정보", data[0].ord_code);
 
         // printOrderDetailList(data.list, $("정적태그 삽입위치"), $("호출할 폼"));
-        printOrderDetailList(data.list, $(cur_tr), $("#orderDetailTemplate"));
+        printOrderDetailList(data, cur_tr, $("#orderDetailTemplate"));
 
       });
     }
+
+    let printOrderDetailList = function(orderDetailData, target, template) {
+      let templateObj = Handlebars.compile(template.html());
+      let orderDetailHtml = templateObj(orderDetailData);
+      // 완성된 html 코드가 들어온다.
+
+      // 상품후기목록 위치를 참조하여, 추가
+      // table 태그에서 추가된 주문상세 tr을 모두 제거
+      target.parent().find(".tr_detail_info").remove();
+
+      // 선택된 주문상세 tr이 바로 아래 추가된다.
+      target.after(orderDetailHtml); // target을 주문상세 버튼에 존재하는 tr로
+    }
+
+    // 주문상세 개별삭제 클릭 이벤트
+    $("table#order_info_tbl").on("click", "button[name='btn_order_delete']", function() {
+      
+      // console.log("개별삭제");
+
+      // 주문상세테이블은 primary key가 2개컬럼을 대상으로 복합키 설정이 되어있다.
+      let ord_code = $(this).data("ord_code");
+      let pro_num = $(this).data("pro_num");
+
+      if(!confirm("상품코드" + pro_num + " 을 삭제하시겠습니까?")) return;
+
+      // console.log("주문코드", ord_code);
+      // console.log("상품코드", pro_num);
+
+      // <input type='hidden' name='ord_code' value="?">
+      actionForm.append("<input type='hidden' name='ord_code' value='" + ord_code + "'>");
+      actionForm.append("<input type='hidden' name='pro_num' value='" + pro_num + "'>");
+
+      actionForm.attr("action", "/admin/order/order_product_delete");
+      actionForm.submit();
+    });
+
+    // 주문상세 방법 2 이벤트
+    $(".btn_order_detail2").on("click", function() {
+
+    // let cur_tr = $(this).parent().parent();
+    let ord_code = $(this).data("ord_code");
+
+    console.log("주문코드", ord_code);
+
+    let url ="/admin/order/order_detail_info2/" + ord_code; // 주소를 가지고
+
+      $("#order_detail_content").load(url); // 주소 요청이 일어나면 <html> 없이도 order_detail_modal 위치에 들어간다.
+    // modal() : 부트스트랩 4.6에서 지원하는  메소드
+      $("#order_detail_modal").modal('show');
+    });
+    
   }); //
 
 </script>
+
+  <div class="modal fade" id="order_detail_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"></span>
+          </button>
+          <div class="modal-body" id="order_detail_content">
+          
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

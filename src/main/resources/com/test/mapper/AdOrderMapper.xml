@@ -56,4 +56,77 @@
  		ORD_CODE > 0
  	</select>
  	
+ 	<select id="orderDetailInfo1" resultType="com.test.domain.OrderDetailInfoVO" parameterType="Long">
+ 		SELECT
+ 			OT.ORD_CODE, OT.PRO_NUM, OT.DT_AMOUNT, P.PRO_NAME, P.PRO_PRICE * OT.DT_AMOUNT AS ORD_PRICE, P.PRO_UP_FOLDER, P.PRO_IMG
+		FROM
+			ORDETAIL_TBL OT, PRODUCT_TBL P
+		WHERE
+			OT.PRO_NUM = P.PRO_NUM
+		AND
+			OT.ORD_CODE = #{ord_code}
+ 	</select>
+ 	
+ 	<!-- 테이블의 컬럼명과 클래스의 필드명이 다를시 resultMap을 작업해 사용해야 한다. -->
+ 	<!-- 클래스안에 다른 클래스가 필드로 사용된 경우 -->
+ 	<select id="orderDetailInfo2" resultMap="orderDetailProductMap" parameterType="Long">
+ 		SELECT
+ 			OT.ORD_CODE, OT.PRO_NUM, OT.DT_AMOUNT, P.PRO_NAME, P.PRO_PRICE * OT.DT_AMOUNT AS ORD_PRICE, P.PRO_UP_FOLDER, P.PRO_IMG
+		FROM
+			ORDETAIL_TBL OT, PRODUCT_TBL P
+		WHERE
+			OT.PRO_NUM = P.PRO_NUM
+		AND
+			OT.ORD_CODE = #{ord_code}
+ 	</select>
+
+	<!--
+	resultMap의 기능
+	1) 테이블을 만들었을때마다 컬럼명과 필드명을 일치시켰다
+	2) 컬럼명과 필드명이 다를때 일치시켜주기 위해 사용.
+	
+	OrderDetailProductVO 클래스를 나타내는 의미
+	 --> 	
+ 	<resultMap type="com.test.domain.OrderDetailProductVO" id="orderDetailProductMap">
+ 		<collection property="orderDetailVO" resultMap="orderDetailMap"></collection>
+ 		<collection property="productVO" resultMap="productMap"></collection>
+ 	</resultMap>
+ 	
+ 	<!--
+ 	orderDetailVO 필드에서 필요한 정보
+ 	 property = 클래스 필드명
+ 	 column = 테이블 컬럼명
+ 	 primary key 값은 id로, 아닌 것은 result로 작성
+ 	 -->
+ 	<resultMap type="com.test.domain.OrderDetailVO" id="orderDetailMap">
+ 		<id property="ord_code" column="ord_code"/>
+ 		<id property="pro_num" column="pro_num"/>
+ 		<result property="dt_amount" column="dt_amount"/>
+ 		<result property="dt_price" column="dt_price"/>
+ 	</resultMap>
+ 	
+ 	<!-- ProductVO 필드에서 필요한 정보 -->
+ 	<resultMap type="com.test.domain.ProductVO" id="productMap">
+ 		<id property="pro_num" column="pro_num" />
+ 		<result property="cg_code" column="cg_code"/>
+ 		<result property="pro_name" column="pro_name"/>
+ 		<result property="pro_price" column="pro_price"/>
+ 		<result property="pro_discount" column="pro_discount"/>
+ 		<result property="pro_publisher" column="pro_publisher"/>
+ 		<result property="pro_content" column="pro_content"/>
+ 		<result property="pro_amount" column="pro_amount"/>
+ 		<result property="pro_buy" column="pro_buy"/>
+ 		<result property="pro_up_folder" column="pro_up_folder"/>
+ 		<result property="pro_img" column="pro_img"/>
+ 		<result property="pro_date" column="pro_date"/>
+ 		<result property="pro_updatedate" column="pro_updatedate"/>
+ 	</resultMap>
+ 	
+ 	<delete id="order_product_delete" parameterType="map">
+ 		DELETE FROM
+		    ORDETAIL_TBL
+		WHERE
+		    ORD_CODE = #{ord_code} AND PRO_NUM = #{pro_num}
+ 	</delete>
+ 	
   </mapper>
