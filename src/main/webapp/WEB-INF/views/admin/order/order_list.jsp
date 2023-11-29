@@ -16,6 +16,19 @@
   <%@ include file="/WEB-INF/views/admin/include/plugin1.jsp" %>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
   
+  <style>
+
+    /* Important part */
+    .modal-content{
+    overflow-y: initial !important
+    }
+    .modal-body{
+    height: 300px;
+    overflow-y: auto;
+    }
+    
+    </style>
+
   <script id="orderDetailTemplate" type="text/x-handlebars-template">
     <tr class="tr_detail_info">
       <td colspan="9" style="text-align: center;"> <!-- 주문리스트쪽 td가 9개이기 때문 -->
@@ -194,6 +207,9 @@
                       </c:if>
                     </ul>
                   </nav>
+                </div>
+                <div style="text-align: right;">
+                  <button type="button" class="btn btn-danger">주문취소</button>
                 </div>
                   
               </div>
@@ -396,7 +412,7 @@
 </script>
 
   <div class="modal fade" id="order_detail_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
