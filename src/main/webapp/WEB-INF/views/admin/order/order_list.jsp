@@ -92,18 +92,21 @@
 
             <div class="box-body">
               <div> <!-- 검색어 작업 -->
-                <form action="/admin/order/ord_list" method="get">
+                <form action="/admin/order/order_list" method="get">
                   <select name="type">
                     <option selected>검색종류선택</option>
-                    <option value="N" ${pageMaker.cri.type == 'N' ? 'selected' : ''}>주문코드</option>
-                    <option value="C" ${pageMaker.cri.type == 'C' ? 'selected' : ''}>주문명</option>
+                    <option value="N" ${pageMaker.cri.type == 'N' ? 'selected' : ''}>주문명</option>
+                    <option value="C" ${pageMaker.cri.type == 'C' ? 'selected' : ''}>주문코드</option>
                     <option value="NC" ${pageMaker.cri.type == 'NC' ? 'selected' : ''}>주문명 or 주문코드</option>
                   </select>
                   <input type="text" name="keyword" value="${pageMaker.cri.keyword}" />
                   <!-- 검색한 데이터 출력을 위해 pageNum과 amount 값을 필요로 한다. -->
                   <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}" />
                   <input type="hidden" name="amount" value="${pageMaker.cri.amount}" />
-                  <button type="submit" class="btn btn-primary">검색</button>
+                    날짜검색 : <input type="date" name="start_date" value="${start_date}">
+                    ~
+                    <input type="date" name="end_date" value="${end_date}">
+                    <button type="submit" class="btn btn-primary" >검색</button>
                 </form>
               </div>
               <table class="table table-bordered" id="order_info_tbl">
@@ -328,6 +331,11 @@
 
       // actionForm 태그를 가지고 있는 하위요소중 input 태그의 name 이 pageNum인 것을 찾는 작업
       actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+
+      // <input type="date" name="start_date" value="${start_date}">
+
+      actionForm.append('<input type="date" name="start_date" value="${start_date}">');
+      actionForm.append('<input type="date" name="end_date" value="${end_date}">');
 
       actionForm.submit();
     });

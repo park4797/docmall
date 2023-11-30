@@ -101,7 +101,13 @@ CREATE TABLE CATEGORY_TBL(
         FOREIGN KEY(CG_PARENT_CODE) REFERENCES CATEGORY_TBL(CG_CODE)
 );
 cg_code, cg_parent_code, cg_name
--- / -> /
+
+-- 카테고리 클래스의 필드명 테이블의 컬렴명이 동일한 경우
+SELECT cg_code, cg_parent_code, cg_name FROM category_tbl;
+
+-- 카테고리 클래스의 필드명 테이블의 컬렴명이 다른 경우(별칭)
+SELECT cg_code AS 클래스필드명, cg_parent_code AS 클래스필드명, cg_name AS 클래스필드명 FROM category_tbl;
+SELECT cg_code AS cate_code, cg_parent_code AS cate_parent_code, cg_name AS cate_name FROM category_tbl;
 
 -- 1차 카테고리 : TOP(1) PANTS(2) SHIRTS(3) OUTER(4) SHOES(5) BAG(6) ACC(7)
 INSERT INTO category_tbl (CG_CODE,CG_PARENT_CODE,CG_NAME) 
@@ -228,6 +234,14 @@ SELECT CG_CODE,CG_PARENT_CODE,CG_NAME FROM CATEGORY_TBL WHERE CG_PARENT_CODE = 1
 
 -- 2차카테고리 전부 출력하라.
 SELECT * FROM category_tbl WHERE CG_PARENT_CODE IS NOT NULL;
+
+-- cg_code에 대한 정보 확인
+SELECT
+    CG_CODE, CG_PARENT_CODE, CG_NAME
+FROM
+    CATEGORY_TBL
+WHERE
+    CG_CODE = #{cg_code}
 
 
 
@@ -520,7 +534,7 @@ DROP TABLE ORDER_TBL;
 --5.주문내용 테이블
 -- 주문자에 대한 정보(중복되는 데이터가 많아 테이블을 분리했다) 
 CREATE TABLE ORDER_TBL(
-        ORD_CODE            NUMBER                  PRIMARY KEY,
+        ORD_CODE            NUMBER                  ,
         MBSP_ID             VARCHAR2(15)            NOT NULL,
         ORD_NAME            VARCHAR2(30)            NOT NULL,
         ORD_ZIPCODE         CHAR(5)                 NOT NULL,
@@ -530,15 +544,18 @@ CREATE TABLE ORDER_TBL(
         ORD_PRICE           NUMBER                  NOT NULL,  -- 총주문금액. 선택
         ORD_REGDATE         DATE DEFAULT SYSDATE    NOT NULL,
         ORD_STATUS          VARCHAR2(20)            NOT NULL,
-        PARYMENT_STATUS     VARCHAR2(20)            NOT NULL,
-        FOREIGN KEY(MBSP_ID) REFERENCES MBSP_TBL(MBSP_ID)
+        PAYMENT_STATUS     VARCHAR2(20)            NOT NULL
+        -- FOREIGN KEY(MBSP_ID) REFERENCES MBSP_TBL(MBSP_ID)
 );
+
+ALTER TABLE ORDER_TBL
+ADD CONSTRAINT PK_ORDER_TBL PRIMARY KEY(ORD_CODE);
 
 -- 주문번호로 사용할 시퀀스 생성
 CREATE SEQUENCE SEQ_ORD_CODE;
 
 -- 주문테이블
--- mbsp_id, ord_name, ord_zipcode, ord_addr_basic, ord_addr_detail, ord_tel, ord_price, ord_regdate, ord_status, paryment_status, ord_code
+-- mbsp_id, ord_name, ord_zipcode, ord_addr_basic, ord_addr_detail, ord_tel, ord_price, ord_regdate, ord_status, payment_status, ord_code
 
 -- 주문상세테이블 참조(장바구니 테이블 참조)
 INSERT ~ SELECT 문
@@ -562,12 +579,36 @@ DROP TABLE ORDETAIL_TBL;
 --6.주문상세 테이블
 -- 주문상품이 저장될 테이블
 CREATE TABLE ORDETAIL_TBL(
-        ORD_CODE        NUMBER      NOT NULL REFERENCES ORDER_TBL(ORD_CODE),
-        PRO_NUM         NUMBER      NOT NULL REFERENCES PRODUCT_TBL(PRO_NUM),
+        ORD_CODE        NUMBER      NOT NULL, -- REFERENCES ORDER_TBL(ORD_CODE),
+        PRO_NUM         NUMBER      NOT NULL, -- REFERENCES PRODUCT_TBL(PRO_NUM),
         DT_AMOUNT       NUMBER      NOT NULL,
         DT_PRICE        NUMBER      NOT NULL,  -- 역정규화
         PRIMARY KEY (ORD_CODE ,PRO_NUM) 
 );
+
+DROP TABLE PAYMENT;
+-- 결제테이블
+CREATE TABLE PAYMENT (
+    PAY_CODE            NUMBER          ,-- 일련번호
+    ORD_CODE            NUMBER          NOT NULL,    -- 주문번호
+    MBSP_ID             VARCHAR2(50)    NOT NULL,    -- 회원ID
+    PAY_METHOD          VARCHAR2(50)    NOT NULL,    -- 결제방식
+    PAY_DATE            DATE            NULL,        -- 결제일
+    PAY_TOT_PRICE       NUMBER          NOT NULL,    -- 결제금액
+    PAY_NOBANK_PRICE    NUMBER          NULL,        -- 무통장입금금액
+    PAY_NOBANK_USER     VARCHAR2(50)    NULL,        -- 무통장 입금자명
+    PAY_NOBANK          VARCHAR2(50)    NULL,        -- 입금은행
+    PAY_BANKACCOUNT     VARCHAR2(100)   NULL,
+    PAY_MEMO            VARCHAR2(100)   NULL         -- 메모
+);
+
+ALTER TABLE PAYMENT
+ADD CONSTRAINT PK_PAYMENT PRIMARY KEY(PAY_CODE);
+
+--    PAY_REST_PRICE      NUMBER          NULL,        -- 미지급금 제외
+-- pay_bankaccount 추가
+-- pay_code, odr_code, mbsp_id, pay_method, pay_date, pay_tot_price, pay_nobank_price, pay_rest_price, pay_nobank_user, pay_nobank, pay_memo
+CREATE SEQUENCE SEQ_PAYMENT_CODE;
 
 insert into ORDETAIL_TBL(ord_code, pro_num, dt_amount, dt_price)
 select c.pro_num, c.cart_amount, p.pro_price
@@ -940,7 +981,7 @@ FROM
     
 -- 결제테이블
 CREATE TABLE PAYMENT (
-    PAY_CODE            NUMBER          PRIMARY KEY, -- 일련번호
+    PAY_CODE            NUMBER, -- 일련번호
     ORD_CODE            NUMBER          NOT NULL,    -- 주문번호
     MBSP_ID             VARCHAR2(50)    NOT NULL,    -- 회원ID
     PAY_METHOD          VARCHAR2(50)    NOT NULL,    -- 결제방식
@@ -949,7 +990,7 @@ CREATE TABLE PAYMENT (
     PAY_NOBANK_PRICE    NUMBER          NULL,        -- 무통장입금금액
     PAY_NOBANK_USER     VARCHAR2(50)    NULL,        -- 무통장 입금자명
     PAY_NOBANK          VARCHAR2(50)    NULL,        -- 입금은행
-    PAY_BANKACCOUNT
+    PAY_BANKACCOUNT     VARCHAR2(100)   NULL,
     PAY_MEMO            VARCHAR2(100)   NULL         -- 메모
 );
 
@@ -977,3 +1018,46 @@ where
         #{cart_code}
      </foreach>
 </delete>
+
+<select id="order_list" resultType="com.test.domain.OrderVO" parameterType="com.test.dto.Criteria">
+		<![CDATA[
+		SELECT
+			ORD_CODE, MBSP_ID, ORD_NAME, ORD_ZIPCODE, ORD_ADDR_BASIC, ORD_ADDR_DETAIL, ORD_TEL, ORD_PRICE, ORD_REGDATE, ORD_STATUS, PAYMENT_STATUS
+		FROM (
+		      SELECT /*+INDEX_DESC(ORDER_TBL PK_ORDER_TBL) */
+		      	rownum rn, ORD_CODE, MBSP_ID, ORD_NAME, ORD_ZIPCODE, ORD_ADDR_BASIC, ORD_ADDR_DETAIL, ORD_TEL, ORD_PRICE, ORD_REGDATE, ORD_STATUS, PAYMENT_STATUS
+		      FROM 
+		      	ORDER_TBL
+		      WHERE
+		      ]]>
+		      <!-- refid : reference id -->
+		      <include refid="criteria"></include>
+		      
+		      <![CDATA[
+		      rownum <= #{pageNum} * #{amount}
+			 )
+		WHERE rn > (#{pageNum} -1) * #{amount}
+		]]>
+ 	</select>
+-- 주문상세정보 : 주문상세테이블, 상품테이블
+-- JOIN : 1) Oracle join,  2) ANSI-SQL 표준 JOIN
+-- 1) Oracle join
+SELECT OT.ORD_CODE, OT.PRO_NUM, OT.DT_AMOUNT, OT.DT_PRICE,
+    P.PRO_NUM, P.CG_CODE, P.PRO_NAME, P.PRO_PRICE, P.PRO_DISCOUNT,P.PRO_PUBLISHER,
+    P.PRO_CONTENT, P.PRO_UP_FOLDER, P.PRO_IMG, P.PRO_AMOUNT, P.PRO_BUY, P.PRO_DATE, P.PRO_UPDATEDATE
+FROM ORDETAIL_TBL OT, PRODUCT_TBL P
+WHERE OT.PRO_NUM = P.PRO_NUM
+AND OT.ORD_CODE = #{}
+
+-- 2) ANSI-SQL 표준 JOIN
+SELECT OT.ORD_CODE, OT.PRO_NUM, OT.DT_AMOUNT, OT.DT_PRICE,
+    P.PRO_NUM, P.CG_CODE, P.PRO_NAME, P.PRO_PRICE, P.PRO_DISCOUNT,P.PRO_PUBLISHER,
+    P.PRO_CONTENT, P.PRO_UP_FOLDER, P.PRO_IMG, P.PRO_AMOUNT, P.PRO_BUY, P.PRO_DATE, P.PRO_UPDATEDATE
+FROM ORDETAIL_TBL OT INNER JOIN PRODUCT_TBL P
+ON OT.PRO_NUM = P.PRO_NUM
+WHERE OT.ORD_CODE = #{}
+
+SELECT OT.ORD_CODE, OT.PRO_NUM, OT.DT_AMOUNT, P.PRO_NUM, P.PRO_NAME, P.PRO_PRICE, P.PRO_CONTENT, P.PRO_UP_FOLDER, P.PRO_IMG
+FROM ORDETAIL_TBL OT, PRODUCT_TBL P
+WHERE OT.PRO_NUM = P.PRO_NUM
+AND OT.ORD_CODE = #{}

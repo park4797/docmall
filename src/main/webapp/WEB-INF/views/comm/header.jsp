@@ -19,7 +19,8 @@
   	<c:if test="${sessionScope.loginStatus == null}">
 	    <a class="p-2 text-dark" href="/member/login">Login</a>
 	    <a class="p-2 text-dark" href="/member/join">Join</a>
-	    <a class="p-2 text-dark" href="#">Cart</a>
+	    <a class="p-2 text-dark" href="/user/cart/cart_list">Cart</a>
+	    <a class="p-2 text-dark" href="/member/mypage">MyPage</a>
     </c:if>
     
     <!-- 로그인 이후 표시 -->

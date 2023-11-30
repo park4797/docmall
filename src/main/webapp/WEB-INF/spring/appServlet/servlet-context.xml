@@ -65,4 +65,52 @@
 		<beans:constructor-arg value="C:\\dev\\upload\\ckeditor\\"></beans:constructor-arg>
 	</beans:bean>
 	
+	<!-- 인터셉터 설정 -->
+	<beans:bean id="testInterceptor" class="com.test.interceptor.TestInterceptor"></beans:bean>
+	
+	<interceptors>
+		<interceptor>
+			<mapping path="/test/testA"/>
+			<mapping path="/test/testB"/>
+			<beans:ref bean="testInterceptor"/>
+		</interceptor>
+	</interceptors>
+	<!-- 연습 -->
+	
+	<!-- 사용자 인터셉트 -->
+	<beans:bean id="userinterseptor" class="com.test.interceptor.Userinterseptor"></beans:bean>
+	
+	<!--
+	exclude-mapping은 mapping보다 먼저 사용해서는 안된다.(매핑의 반대개념)
+	<exclude-mapping path="제외매핑"/>, interceptor의 영향을 받지 않을 주소
+	-->
+	<interceptors>
+		<interceptor>
+			<!-- <mapping path="/member/*"/>  -->
+			<!-- <exclude-mapping path="/member/login"/> -->
+			<mapping path="/member/confirmPw"/>
+			<mapping path="/member/modify"/>
+			<mapping path="/member/mypage"/>
+			<mapping path="/member/delConfirmPw"/>
+			
+			<mapping path="/user/order/*"/>
+			<mapping path="/user/cart/*"/>
+			
+			<beans:ref bean="userinterseptor"/>
+		</interceptor>
+	</interceptors>
+	
+	<!-- 관리자 인터셉트 -->
+	<beans:bean id="adminInterceptor" class="com.test.interceptor.AdminInterceptor"></beans:bean>
+	
+	<interceptors>
+		<interceptor>
+			<mapping path="/admin/**"/>
+			<exclude-mapping path="/admin/intro"/>
+			<exclude-mapping path="/admin/admin_ok"/>
+			
+			<beans:ref bean="adminInterceptor"/>
+		</interceptor>
+	</interceptors>
+	
 </beans:beans>

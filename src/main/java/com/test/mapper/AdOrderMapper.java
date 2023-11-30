@@ -11,9 +11,10 @@ import com.test.dto.Criteria;
 
 public interface AdOrderMapper {
 
-	List<OrderVO> order_list(Criteria cri);
+	// 주문목록과 getTotalCount는 모든 조건(parameter)을 같이 가지고 있어야 한다.
+	List<OrderVO> order_list(@Param("cri") Criteria cri, @Param("start_date") String start_date, @Param("end_date") String end_date);
 	
-	int getTotalCount(Criteria cri);
+	int getTotalCount(@Param("cri") Criteria cri, @Param("start_date") String start_date, @Param("end_date") String end_date);
 	
 	// 주문상세 1
 	List<OrderDetailInfoVO> orderDetailInfo1(Long ord_code);

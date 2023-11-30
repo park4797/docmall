@@ -132,6 +132,10 @@
           type : 'post',
           data : {cart_code : cart_code, cart_amount : cart_amount},
           dataType : 'text',
+          // url을 동작하기전에 먼저 동작된다.
+          beforeSend : function(xhr) {
+            xhr.setRequestHeader("AJAX", "true");  // url의 Header정보에 들어간다.
+          },
           success : function(result) {
             if(result == 'success') {
               alert("수량이 변경되었습니다.");
@@ -147,8 +151,14 @@
 
               fn_cart_sum_price()
             }
+          },
+          // 성공시 위의 success가 진행되고, 실패시 아래 코드 진행
+          error : function(xhr, status, error) {
+            alert(status);
+            alert("로그인 페이지로 이동합니다.");
+            location.href="/member/login";
           }
-        })
+        });
       });
 
       // 장바구니 삭제(ajax 사용)
@@ -166,6 +176,9 @@
           type : 'post',
           dataType : 'text', // success라는 값을 받기 위함. (스프링의 return type)
           data : {cart_code : cart_code},
+          beforeSend : function(xhr) {
+            xhr.setRequestHeader("AJAX", "true");  // url의 Header정보에 들어간다.
+          },
           success : function(result) {
             if(result == "success") {
               alert("삭제되었습니다.");
@@ -174,6 +187,11 @@
 
               fn_cart_sum_price()
             }
+          },
+          error : function(xhr, status, error) {
+            alert(status);
+            alert("로그인 페이지로 이동합니다.");
+            location.href="/member/login";
           }
         });
       });
@@ -241,6 +259,9 @@
           type:'post',
           dataType:'text', // json, text, xml, html 등
           data:{cart_code_arr : cart_code_arr}, // {파라미터명1 : 값1, 파라미터명2 : 값2 ...},
+          beforeSend : function(xhr) {
+            xhr.setRequestHeader("AJAX", "true");  // url의 Header정보에 들어간다.
+          },
           success: function(result){
             if(result == "success"){
               alert("체크상품이 삭제되었습니다.")
@@ -254,7 +275,12 @@
               actionForm.submit();
               */
             }
-          } 
+          },
+          error : function(xhr, status, error) {
+            alert(status);
+            alert("로그인 페이지로 이동합니다.");
+            location.href="/member/login";
+          }
         });
       });
       

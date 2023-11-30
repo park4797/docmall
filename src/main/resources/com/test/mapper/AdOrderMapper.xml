@@ -3,20 +3,24 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
+  <!-- mybatis 내에서도 java문법을 사용할 수 있다. -->
+  
   <mapper namespace="com.test.mapper.AdOrderMapper">
   
  	<!-- 공통된 sql 구문작업시 사용 : 검색조건 작업 -->
+ 	<!-- 검색기능을 사용하지 않으면 동작되지 않는다.(for문 내에 typeArr에 값이 없기 때문 Creteria 클래스 참고) -->
+ 	<!-- Parameter가 추가되어 cri.typeArr처럼 어느곳에서 참조되었는지 나타내주어야 한다. -->
  	<sql id="criteria">
  	<!-- prefixOverrides : 실행될 쿼리의 <trim> 문 안에 쿼리 가장 앞에 해당하는 문자들이 있으면 자동으로 지워준다 -->
  		<trim prefix="(" suffix=") AND" prefixOverrides="OR">
- 			<foreach collection="typeArr" item="type"><!-- getType() 동작 -->
+ 			<foreach collection="cri.typeArr" item="type"><!-- getType() 동작, 복합검색을 위해 for문 사용 -->
  				<trim prefix="OR">
  					<choose>
-		 				<when test="type == 'N'.toString()">
-		 					ORD_CODE like '%' || #{keyword} || '%'
+		 				<when test="cri.type == 'N'.toString()">
+		 					ORD_NAME like '%' || #{cri.keyword} || '%'
 		 				</when>
-		 				<when test="type == 'C'.toString()">
-		 					ORD_NAME like '%' || #{keyword} || '%'
+		 				<when test="cri.type == 'C'.toString()">
+		 					ORD_CODE like '%' || #{cri.keyword} || '%'
 		 				</when>
  					</choose>
  				</trim>
@@ -24,8 +28,20 @@
  		</trim>
  	</sql>
  	
+ 	<!-- 검색어 조건을 사용하지 않을때도 처리해주어야 한다.
+ 		날짜데이터가 String으로 들어오기 때문에 형변환(to_date 사용시 00시 00분 00초로 들어온다)
+ 		조건이 또 추가될시 AND를 작성하고 추가해야한다.
+ 		-->
+ 	<sql id="period">
+       <if test="start_date != null and !start_date.equals('')">
+       <![CDATA[
+          ORD_REGDATE >= TO_DATE(#{start_date}) AND ORD_REGDATE < TO_DATE(#{end_date}) + 1 AND
+       ]]>
+       </if>
+    </sql>
+       
  	<!-- CDATA section -->
- 	<select id="order_list" resultType="com.test.domain.OrderVO" parameterType="com.test.dto.Criteria">
+ 	<select id="order_list" resultType="com.test.domain.OrderVO" parameterType="map">
 		<![CDATA[
 		SELECT
 			ORD_CODE, MBSP_ID, ORD_NAME, ORD_ZIPCODE, ORD_ADDR_BASIC, ORD_ADDR_DETAIL, ORD_TEL, ORD_PRICE, ORD_REGDATE, ORD_STATUS, PAYMENT_STATUS
@@ -38,19 +54,21 @@
 		      ]]>
 		      <!-- refid : reference id -->
 		      <include refid="criteria"></include>
+		      <include refid="period"></include>
 		      
 		      <![CDATA[
-		      rownum <= #{pageNum} * #{amount}
+		      rownum <= #{cri.pageNum} * #{cri.amount}
 			 )
-		WHERE rn > (#{pageNum} -1) * #{amount}
+		WHERE rn > (#{cri.pageNum} -1) * #{cri.amount}
 		]]>
  	</select>
     
- 	<select id="getTotalCount" resultType="int">
+ 	<select id="getTotalCount" resultType="int" parameterType="map">
  		select count(*) from ORDER_TBL where
  		
  		<!-- 검색에 대한 정보가 들어온다 -->
  		<include refid="criteria"></include>
+ 		<include refid="period"></include>
  		
  		<!-- 검색을 사용하지 않으면  -->
  		ORD_CODE > 0
