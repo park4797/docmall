@@ -43,18 +43,21 @@ public class FileUtils {
 		String realUploadFileName = ""; // 실제 업로드한 파일이름(파일이름 중복 방지)
 		
 //		File클래스 : 파일과 폴더관련 작업하는 기능 제공
+		// File 객체 생성
 		File file = new File(uploadFolder, dateFolder); // 예> "C:/dev/upload"  "2023/11/02"
 		
 		// 예> "C:/dev/upload"  "2023/11/02" 폴더 경로가 없으면 폴더명을 생성
 		if(file.exists() == false) {
-			file.mkdirs();
+			file.mkdirs(); // mkdir()은 경로의 마지막 폴더만 생성
 		}
 		
+		// 클라이언트에서 전송한 원본파일명
 		String clientFileName = uploadFile.getOriginalFilename();
 		
 		// UUID : 파일명을 중복방지를 위하여 고유한 문자열을 생성해주는 클래스
 		UUID uuid = UUID.randomUUID();
 		// 904e1906-ed6f-49d2-867a-7648f07628d4_Hello.PNG
+		// 게시판 다운로드 기능 구현시 원본 파일명 ex) Hello.PNG 를 컬럼을 생성해 받아두는 것이 좋다.
 		realUploadFileName = uuid.toString() + "_" + clientFileName;
  		
 		try {

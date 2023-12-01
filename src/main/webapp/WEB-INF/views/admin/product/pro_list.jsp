@@ -52,6 +52,7 @@
                     <option value="NP" ${pageMaker.cri.type == 'NP' ? 'selected' : ''}>상품명 or 제조사</option>
                     <option value="NPC" ${pageMaker.cri.type == 'NPC' ? 'selected' : ''}>상품명 or 상품코드 or 제조사</option>
                   </select>
+                  <!-- Criteria 의 정보가 참조된다. -->
                   <input type="text" name="keyword" value="${pageMaker.cri.keyword}" />
                   <!-- 검색한 데이터 출력을 위해 pageNum과 amount 값을 필요로 한다. -->
                   <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}" />
@@ -129,13 +130,13 @@
                       <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="num">
                         <li class='page-item ${pageMaker.cri.pageNum == num ? "active":"" }'
                           aria-current="page">
-                          <a class="page-link movepage" href="${num}" data-page="${num}">${num}</a>
+                          <a class="page-link movepage" href="${num}">${num}</a>
                         </li>
                       </c:forEach>
 
                       <c:if test="${pageMaker.next}">
                         <li class="page-item">
-                          <a href="${pageMaker.endPage + 1}" class="page-link movepage" href="#">Next</a>
+                          <a href="${pageMaker.endPage + 1}" class="page-link movepage">Next</a>
                         </li>
                       </c:if>
                     </ul>
@@ -252,13 +253,15 @@
   // 동적코딩을 할 때 값을 변경하는 작업을 할때는 절차적으로 작업해야 한다.
   $(document).ready(function() {
 
-    let actionForm = $("#actionForm");
+    let actionForm = $("#actionForm"); // 전역변수로 액션폼 참조
 
+    // movepage는 페이징 번호. 따라서 클릭시마다 actionForm을 전송한다.
     $(".movepage").on("click", function(event) {
       event.preventDefault(); // a태그의 href속성에 페이지번호를 숨겨두었다.
 
       actionForm.attr("action", "/admin/product/pro_list");
 
+      // 현재선택한 페이지 번호
       // actionForm 태그를 가지고 있는 하위요소중 input 태그의 name 이 pageNum인 것을 찾는 작업
       actionForm.find("input[name='pageNum']").val($(this).attr("href"));
 
@@ -380,12 +383,13 @@
     // 상품수정
     $("button[name='btn_pro_edit']").on("click", function() {
 
-      // 수정 상품코드
+      // 수정 상품코드(체크박스에 숨겨둔 상품코드)
       let pro_num = $(this).parent().parent().find("input[name='check']").val();
       
       // console.log("상품코드", pro_num);
 
       // 뒤로가기 클릭후 다시 수정버튼 클릭시 코드 중복되는 부분이 있어 삭제작업, 기존 bno를 삭제했던것과 동일
+      // actionForm에 어떠한 태그가 있는지 파악
       actionForm.find("input[name='pro_num']").remove();
 
       // <input type="hidden" name="pro_num" id="pro_num" />
@@ -418,7 +422,14 @@
       actionForm.attr("action", "/admin/product/pro_delete");
       actionForm.submit();
     });
-    
+
+    // 상품 이미지, 상품명 클릭시
+    $(".move").on("click", function(e) {
+
+      e.preventDefault();
+      actionForm.attr("action", "/admin/product/pro_ge");
+      actionForm.submit();
+    })
 
   }); //
 

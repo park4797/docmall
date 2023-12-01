@@ -49,6 +49,7 @@
     
 <%@ include file="/WEB-INF/views/comm/header.jsp"%>
 
+<!-- 1차 카테고리 표시작업 -->
 <%@ include file="/WEB-INF/views/comm/category_menu.jsp" %>
 
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
@@ -111,7 +112,8 @@
 	<!-- JQuery Library -->
 	<%@ include file="/WEB-INF/views/comm/plugIn.jsp" %>
 	
-	<!-- 카테고리 메뉴 자바스크립트 작업소스(servlet-context 참고 -->
+	<!-- 카테고리 메뉴 자바스크립트 작업소스 -->
+	<!-- js 경로를 사용하기 위해 경로작업을 미리 해주었다.(servlet-context 참고) -->
 	<script src="/js/category_menu.js">
 
 	</script>

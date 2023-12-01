@@ -84,7 +84,7 @@ public class AdProductController {
 		// 1) 파일 업로드 작업. 선수작업 : FileUtils 클래스작업
 		String dateFolder = FileUtils.getDateFolder();
 		
-		// FileUtils의 uploadFile의 매개변수로 들어가게된다.
+		// savedFileName : 실제업로드(저장)한 파일명
 		String savedFileName = FileUtils.uploadFile(uploadPath, dateFolder, uploadFile);
 		
 		vo.setPro_img(savedFileName);
@@ -170,7 +170,7 @@ public class AdProductController {
 		}
 	}
 	
-	// 상품리스트(목록과 페이징 작업)
+	// 상품리스트(목록과 페이징 작업), 메소드의 파라미터를 스프링에서 자동으로 객체생성을 해준다
 	@GetMapping("/pro_list")
 	public void pro_list(Criteria cri, Model model) throws Exception {
 		
@@ -248,7 +248,7 @@ public class AdProductController {
 	}
 	
 	// 상품수정 폼 페이지
-	@GetMapping("/pro_edit")
+	@GetMapping({"/pro_edit", "/pro_get"})
 	public void pro_edit(@ModelAttribute("cri") Criteria cri, Integer pro_num, Model model) throws Exception {
 		
 		// 선택한 상품정보
@@ -258,12 +258,12 @@ public class AdProductController {
 		// 역슬래시를 슬래시로 변환하는 작업
 		productVO.setPro_up_folder(productVO.getPro_up_folder().replace("\\", "/"));
 		
-		model.addAttribute("productVO", productVO);
+		model.addAttribute("productVO", productVO); // 2차카테고리 코드
 		
 		// 1차카테고리 전체는 GlobalControllerAdvice 클래스 Model 참조
 		
 		// 상품카테고리에서 2차카테고리를 이용한 1차 카테고리 정보를 참조
-		// get(productVO.getCg_code()) : 상품테이블에 있는 2차카테고리 코드
+		// get(productVO.getCg_code()) : 상품테이블에 있는 2차카테고리 코드의 부모인 1차 카테고리 정보를 가져오는 작업
 		CategoryVO firstCategory = adCategoryService.get(productVO.getCg_code());
 		model.addAttribute("first_category", firstCategory);
 		
@@ -287,6 +287,7 @@ public class AdProductController {
 		// 파일이 변경될 경우 해야할 작업 1) 기존 이미지 파일 삭제, 2) 업로드작업 
 		// 참고>클라이언트 파일명을 DB에 저장하는 부분
 		// 첨부파일 확인할때 조건식으로 사용 uploadFile.getSize() > 0
+		// if문이 false면 상품이미지를 upload하지 않았고, true면 변경한것
 		if(!uploadFile.isEmpty()) {
 			
 			// 1) 기존이미지파일 삭제작업
@@ -304,6 +305,7 @@ public class AdProductController {
 			
 		}
 		
+		// 위 조건문이 false면 기존의 정보가 그대로 DB에 UPDATE된다.
 		// DB 연동작업
 		adProductService.pro_edit_ok(vo);
 		

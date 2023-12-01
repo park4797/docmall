@@ -80,6 +80,7 @@ desired effect
             <div class="form-group row">
               <label for="title" class="col-sm-2">카테고리</label>
               <div class="col-sm-3">
+                <!-- 수정폼은 리스트로 돌아가야하므로 한 폼안에 정보를 다 가지고 있어야 한다. -->
                 <input type="hidden" name="pageNum" id="pageNum" value="${cri.pageNum}" />
                 <input type="hidden" name="amount" id="amount" value="${cri.amount}" />
                 <input type="hidden" name="type" id="type" value="${cri.type}" />
@@ -130,7 +131,7 @@ desired effect
               <div class="col-sm-4">
                 <input type="file" class="form-control" name="uploadFile" id="uploadFile">
 
-                <!-- 상품이미지 변경시 기존이미지 삭제를 위해 사용된다. -->
+                <!-- 상품이미지 변경시 기존이미지 삭제를 위해 사용된다. 이미지를 수정하지 않을 경우 그대로 DB에 update-->
                 <input type="hidden" name="pro_img" value="${productVO.pro_img}">
                 <input type="hidden" name="pro_up_folder" value="${productVO.pro_up_folder}">
               </div>

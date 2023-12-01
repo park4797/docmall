@@ -48,6 +48,10 @@
         // 한글이나 특수문자를 서버에 보낼때 오류가 나는 경우
         // 인코딩 과정을 통하여 보내서 처리할 수 있다.
         
+        // 현재 파일이 jsp일 경우 백틱(``)을 사용할 수 없다. 즉, jsp의 el문법으로 인식하기 때문에 서버에서 동작이 된다.
+		location.href = '/user/product/pro_list?cg_code=' + cg_code + '&cg_name=' + cg_name;
+		        
+        // 현재 파일이 js일경우
         location.href = `/user/product/pro_list?cg_code=${cg_code}&cg_name=${cg_name}`;
       });
 

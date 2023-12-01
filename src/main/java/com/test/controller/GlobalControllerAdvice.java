@@ -30,6 +30,7 @@ public class GlobalControllerAdvice {
 		
 		log.info("1차카테고리 리스트");
 		
+		// 사용자 : 1차카테고리 표시 참조, 관리자 : 상품등록 - 1차카테고리 표시참조
 		List<CategoryVO> firstCategoryList = adCategoryService.getFirstCategoryList();
 		model.addAttribute("firstCategoryList", firstCategoryList);
 	}

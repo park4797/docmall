@@ -26,4 +26,5 @@ public class ProductVO {
 	private Date	pro_updatedate;
 	
 //	private MultipartFile uploadFile;
+	// 매개변수로 주어서 작업할 수도 있고 클래스에 설정(유지보수 차원에서 좋다)하여 사용할 수 있다.
 }

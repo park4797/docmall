@@ -27,6 +27,9 @@
    <!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
    <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
       <beans:property name="prefix" value="/WEB-INF/views/" />
+      
+      <!-- Controller의 메소드에서 리턴해주는 폴더명을 포함한 jsp파일을 참조 -->
+      
       <beans:property name="suffix" value=".jsp" />
    </beans:bean>
    

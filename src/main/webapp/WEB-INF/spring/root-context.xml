@@ -39,7 +39,7 @@
       <constructor-arg ref="hikariConfig"></constructor-arg>
    </bean>
    
-   <!-- mybatis 라이브러리를 이용한 설정작업 -->
+   <!-- mybatis 라이브러리를 이용한 설정작업, DB를 연결하고 주도적으로 실행 -->
    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
       <property name="dataSource" ref="dataSource"></property>
    </bean>

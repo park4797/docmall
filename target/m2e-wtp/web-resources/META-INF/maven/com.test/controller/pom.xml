@@ -121,14 +121,13 @@
 			<scope>provided</scope>
 		</dependency>
 		
-		<!--
+		<!-- 추가
 		<% %> 태그를 대신한다. jstl library에서 제공하는 문법
 		
 		JSP 기본문법
 			- EL(Expression Language) : JSP 자체 문법
 			- 코드 : ${문법}
 		-->
-		
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
@@ -188,7 +187,7 @@
 	    <version>3.5.11</version>
 	</dependency>
 	
-	<!-- 4)Srping 과 Mybatis 연결 라이브러리 -->
+	<!-- 4)Srping 과 Mybatis 연결 라이브러리(브릿지) -->
 	<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
 	<dependency>
 	    <groupId>org.mybatis</groupId>

@@ -70,6 +70,7 @@ desired effect
               <div class="col-sm-3">
                 <select class="form-control" id="firstCategory">
                   <option>1차 카테고리 선택</option>
+                  <!-- 글로벌 카테고리 정보를 모델로 추가해 참조 -->
                   <c:forEach items="${firstCategoryList}" var="categoryVO">
                   	<option value="${categoryVO.cg_code}">${categoryVO.cg_name}</option>
                   </c:forEach>
@@ -244,6 +245,7 @@ desired effect
 
 <%@ include file="/WEB-INF/views/admin/include/plugin2.jsp" %>
 
+<!-- ckeditor.js 참조 -->
 <script src="/bower_components/ckeditor/ckeditor.js"></script>
 <script>
   $(document).ready(function() {
@@ -253,10 +255,10 @@ desired effect
         enterMode : CKEDITOR.ENTER_BR,
         shiftEnterMode : CKEDITOR.ENTER_P,
         toolbarCanCollapse : true,
-        removePlugins : "elementspath", 
+        removePlugins : "elementspath",
         
-        //업로드 탭기능추가 속성. CKEditor에서 파일업로드해서 서버로 전송클릭하면 , 이 주소가 동작된다.
-        filebrowserUploadUrl: '/admin/product/imageUpload' 
+        //업로드 팝업 기능추가 속성. CKEditor에서 파일업로드해서 서버로 전송클릭하면 , 이 주소가 동작된다.
+        filebrowserUploadUrl: '/admin/product/imageUpload'
       }
 
       CKEDITOR.replace("pro_content", ckeditor_config);
